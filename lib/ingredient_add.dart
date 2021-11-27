@@ -9,6 +9,8 @@ import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:intl/intl.dart';
 
 class AddIngredient extends StatefulWidget {
+  var nameList, imgList;
+  AddIngredient({this.nameList, this.imgList});
   @override
   _AddIngredientState createState() => _AddIngredientState();
 }
@@ -44,7 +46,8 @@ class _AddIngredientState extends State<AddIngredient> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  if(selected.contains(product.name))
+                  // if(selected.contains(product.name))
+                  if(widget.nameList.contains(product.name))
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0,0,8,0),
                       child: Icon(Icons.circle, size: 5,),
@@ -92,7 +95,8 @@ class _AddIngredientState extends State<AddIngredient> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  if(selected.contains(product.name))
+                  // if(selected.contains(product.name))
+                  if(widget.nameList.contains(product.name))
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0,0,8,0),
                       child: Icon(Icons.circle, size: 5,),
@@ -140,7 +144,8 @@ class _AddIngredientState extends State<AddIngredient> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  if(selected.contains(product.name))
+                  // if(selected.contains(product.name))
+                  if(widget.nameList.contains(product.name))
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0,0,8,0),
                       child: Icon(Icons.circle, size: 5,),
