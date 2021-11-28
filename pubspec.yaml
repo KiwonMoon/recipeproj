@@ -65,6 +65,16 @@ flutter:
      - images/processed/cheese.png
      - images/processed/eggs.png
      - images/processed/milk.png
+     - images/category/chicken.png
+     - images/category/chinesefood.png
+     - images/category/japanfood.png
+     - images/category/ramen.png
+     - images/category/rice.png
+     - images/category/ricecake.png
+     - images/category/sidemenu.png
+     - images/category/snack.png
+     - images/category/soup.png
+     - images/category/spaguetti.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

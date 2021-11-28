@@ -6,6 +6,9 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:intl/intl.dart';
 import 'package:recipe_project/recipelistpage.dart';
+import 'model/category_repository.dart';
+import 'model/category_model.dart';
+import 'bookmark.dart';
 
 class Ingredient extends StatefulWidget {
   @override
@@ -13,44 +16,44 @@ class Ingredient extends StatefulWidget {
 }
 
 class _IngredientState extends State<Ingredient> {
-  // List<Card> _buildGridCategory(BuildContext context) {
-  //   List<CategoryModel> products = CategoryRepository.loadCategories();
-  //
-  //   if(products == null || products.isEmpty) {
-  //     return const <Card>[];
-  //   }
-  //
-  //   final ThemeData theme = Theme.of(context);
-  //
-  //   return products.map((product) {
-  //     return Card(
-  //       clipBehavior: Clip.antiAlias,
-  //       child: InkWell(
-  //         child: Column(
-  //           crossAxisAlignment: CrossAxisAlignment.center,
-  //           children: <Widget>[
-  //             AspectRatio(aspectRatio: 1/1,
-  //               child: Image.asset(
-  //                 product.img,
-  //               ),),
-  //             SizedBox(
-  //               height: 5,
-  //             ),
-  //             Row(
-  //               mainAxisAlignment: MainAxisAlignment.center,
-  //               children: <Widget>[
-  //                 Text(product.name, style: TextStyle(fontSize: 15),),
-  //               ],
-  //             ),
-  //           ],
-  //         ),
-  //         onTap: (){
-  //           //Navigator.push(context, MaterialPageRoute(builder: (context) => RecipePage()),);
-  //         },
-  //       ),
-  //     );
-  //   }).toList();
-  // }
+  List<Card> _buildGridCategory(BuildContext context) {
+    List<CategoryModel> products = CategoryRepository.loadCategories();
+
+    if(products == null || products.isEmpty) {
+      return const <Card>[];
+    }
+
+    final ThemeData theme = Theme.of(context);
+
+    return products.map((product) {
+      return Card(
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              AspectRatio(aspectRatio: 1/1,
+                child: Image.asset(
+                  product.img,
+                ),),
+              SizedBox(
+                height: 5,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(product.name, style: TextStyle(fontSize: 15),),
+                ],
+              ),
+            ],
+          ),
+          onTap: (){
+            //Navigator.push(context, MaterialPageRoute(builder: (context) => RecipePage()),);
+          },
+        ),
+      );
+    }).toList();
+  }
   List<Card> _buildSelectedIngredients(BuildContext context) {
     if (selected == null || selected.isEmpty) {
       return const <Card>[];
@@ -109,7 +112,9 @@ class _IngredientState extends State<Ingredient> {
                 Icons.bookmark_border,
                 semanticLabel: 'bookmark',
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => BookmarkPage()),);
+              },
             ),
           ],
           bottom: TabBar(
@@ -128,28 +133,28 @@ class _IngredientState extends State<Ingredient> {
             children: [
               SingleChildScrollView(
                 scrollDirection: Axis.vertical,
-                // child: Padding(
-                //   padding: const EdgeInsets.fromLTRB(10, 20, 10, 30),
-                //   child: Column(
-                //     crossAxisAlignment: CrossAxisAlignment.center,
-                //     mainAxisAlignment: MainAxisAlignment.center,
-                //     children: <Widget>[
-                //       Column(
-                //         children: <Widget>[
-                //           GridView.count(
-                //             physics: NeverScrollableScrollPhysics(),
-                //             shrinkWrap: true,
-                //             crossAxisCount: 4,
-                //             childAspectRatio: 3 / 4,
-                //             mainAxisSpacing: 10,
-                //             crossAxisSpacing: 2,
-                //             children: _buildGridCategory(context),
-                //           ),
-                //         ],
-                //       ),
-                //     ],
-                //   ),
-                // ),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 20, 10, 30),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Column(
+                        children: <Widget>[
+                          GridView.count(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            crossAxisCount: 4,
+                            childAspectRatio: 3 / 4,
+                            mainAxisSpacing: 10,
+                            crossAxisSpacing: 2,
+                            children: _buildGridCategory(context),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ),
               SingleChildScrollView(
                 scrollDirection: Axis.vertical,
