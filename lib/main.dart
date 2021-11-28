@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'ingredient.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'model/login.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,7 +17,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.deepOrange,
       ),
-      home: Ingredient(),
+      home: Login(),
+      // Ingredient(),
     );
   }
 }
