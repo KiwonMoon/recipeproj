@@ -6,9 +6,11 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:intl/intl.dart';
 import 'package:recipe_project/recipelistpage.dart';
+import 'package:recipe_project/chart.dart';
 import 'model/category_repository.dart';
 import 'model/category_model.dart';
 import 'bookmark.dart';
+import 'package:recipe_project/search.dart';
 
 class Ingredient extends StatefulWidget {
   @override
@@ -54,32 +56,6 @@ class _IngredientState extends State<Ingredient> {
       );
     }).toList();
   }
-  List<Card> _buildSelectedIngredients(BuildContext context) {
-    if (selected == null || selected.isEmpty) {
-      return const <Card>[];
-    }
-
-    return selected.map((select) {
-      return Card(
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              // AspectRatio(
-              //   aspectRatio: 1 / 1,
-              //   child: Image.asset('name'),
-              // ),
-              SizedBox(
-                height: 5,
-              ),
-              Text(select),
-            ],
-          ),
-        ),
-      );
-    }).toList();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +80,9 @@ class _IngredientState extends State<Ingredient> {
               Icons.search,
               semanticLabel: 'search',
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Search()),);
+            },
           ),
           actions: <Widget>[
             IconButton(
@@ -340,12 +318,31 @@ class _IngredientState extends State<Ingredient> {
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(20.0))),
                                   onPressed: () {
-                                  //  RecipeListPage
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 RecipeListPage()));
+                                  },
+                                ),
+                                SizedBox(height: 5,),
+                                RaisedButton(
+                                  child: Text(
+                                    '요리 보기',
+                                    style: TextStyle(
+                                        fontSize: 20, color: Colors.white),
+                                  ),
+                                  color: Colors.deepOrange,
+                                  padding: EdgeInsets.fromLTRB(55, 15, 55, 15),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20.0))),
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ChartPage()));
                                   },
                                 ),
                               ],

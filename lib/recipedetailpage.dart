@@ -26,6 +26,12 @@ class RecipeDetailPage extends StatelessWidget {
         child: Container(
           child: Column(
             children: [
+              Image.asset(
+                'images/category/ramen.png',
+                width: 600,
+                height: 240,
+                fit: BoxFit.cover,
+              ),
               ListTile(
                 trailing: IconButton(
                   icon: Icon(Icons.bookmark_border_outlined, color: Colors.black, size: 30.0,),
@@ -186,25 +192,28 @@ class RecipeDetailPage extends StatelessWidget {
                     ),
                     ListView.builder(
                       shrinkWrap: true,
-                      itemCount: 5,
+                      itemCount: 3,
                       itemBuilder: (BuildContext context, int index){
                         return Container(
                           margin: EdgeInsets.only(bottom: 5.0),
                           child: Row(
                             children: [
                               Flexible(
-                                flex: 3,
+                                flex: 7,
                                 child: Image.asset('images/grain/corn.png',),
                               ),
-                              Container(
-                                margin: EdgeInsets.only(left: 5.0, right: 5.0),
-                                child: Flexible(
-                                  flex: 1,
-                                  child: Text('1'),
-                                ),
+                              Spacer(
+                                flex: 1,
                               ),
                               Flexible(
-                                flex: 5,
+                                flex: 1,
+                                child: Text('1'),
+                              ),
+                              Spacer(
+                                flex: 1,
+                              ),
+                              Flexible(
+                                flex: 10,
                                 child: Text('대파는 길게 4등분 한 후 프라이팬 지름에 맞춰 3~4등분하여 준비한다.', style: TextStyle(fontSize: 11.0),),
                               ),
                             ],
