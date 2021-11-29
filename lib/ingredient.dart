@@ -9,6 +9,7 @@ import 'package:recipe_project/recipelistpage.dart';
 import 'model/category_repository.dart';
 import 'model/category_model.dart';
 import 'bookmark.dart';
+import 'map.dart';
 
 class Ingredient extends StatefulWidget {
   @override
@@ -151,6 +152,27 @@ class _IngredientState extends State<Ingredient> {
                             children: _buildGridCategory(context),
                           ),
                         ],
+                      ),
+                      SizedBox(height: 70,),
+                      RaisedButton(
+                        child: Text(
+                          '주변 가게보기',
+                          style: TextStyle(
+                              fontSize: 20, color: Colors.white),
+                        ),
+                        color: Colors.deepOrange,
+                        padding: EdgeInsets.fromLTRB(55, 15, 55, 15),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(20.0))),
+                        onPressed: () {
+                          //  MapPage
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      MapPage()));
+                        },
                       ),
                     ],
                   ),
