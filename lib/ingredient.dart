@@ -6,9 +6,13 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:intl/intl.dart';
 import 'package:recipe_project/recipelistpage.dart';
+import 'package:recipe_project/chart.dart';
 import 'model/category_repository.dart';
 import 'model/category_model.dart';
 import 'bookmark.dart';
+import 'package:recipe_project/search.dart';
+
+import 'model/login.dart';
 import 'map.dart';
 
 class Ingredient extends StatefulWidget {
@@ -55,46 +59,31 @@ class _IngredientState extends State<Ingredient> {
       );
     }).toList();
   }
-  List<Card> _buildSelectedIngredients(BuildContext context) {
-    if (selected == null || selected.isEmpty) {
-      return const <Card>[];
-    }
-
-    return selected.map((select) {
-      return Card(
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              // AspectRatio(
-              //   aspectRatio: 1 / 1,
-              //   child: Image.asset('name'),
-              // ),
-              SizedBox(
-                height: 5,
-              ),
-              Text(select),
-            ],
-          ),
-        ),
-      );
-    }).toList();
-  }
 
   @override
   Widget build(BuildContext context) {
     List nameList = [];
     List imgList = [];
 
-    FirebaseFirestore.instance
-        .collection('selectedIngredients')
-        .doc('$userID')
-        .get()
-        .then((DocumentSnapshot document) {
-      imgList.addAll(document['img']);
-      nameList.addAll(document['name']);
-    });
+    if(googlelogin == true) {
+      FirebaseFirestore.instance
+          .collection('selectedIngredients')
+          .doc('${currentUserID!.uid}')
+          .get()
+          .then((DocumentSnapshot document) {
+        imgList.addAll(document['img']);
+        nameList.addAll(document['name']);
+      });
+    } else if(selected.length > 0) {
+      FirebaseFirestore.instance
+          .collection('selectedIngredients')
+          .doc('${currentUserID!.uid}')
+          .get()
+          .then((DocumentSnapshot document) {
+        imgList.addAll(document['img']);
+        nameList.addAll(document['name']);
+      });
+    }
 
     return DefaultTabController(
       child: Scaffold(
@@ -105,7 +94,9 @@ class _IngredientState extends State<Ingredient> {
               Icons.search,
               semanticLabel: 'search',
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Search()),);
+            },
           ),
           actions: <Widget>[
             IconButton(
@@ -199,8 +190,9 @@ class _IngredientState extends State<Ingredient> {
                                 IconButton(
                                   icon: Icon(Icons.add),
                                   onPressed: () {
-                                    if (userID != 'user1')
-                                      addIngredients(userID);
+                                    // if (userID != 'user1')
+                                    if(googlelogin == false)
+                                      addIngredients(currentUserID!.uid);
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -211,7 +203,8 @@ class _IngredientState extends State<Ingredient> {
                                                 )));
                                   },
                                 ),
-                                if (userID == 'user1')
+                                // if (userID == 'user1')
+                                if(nameList.isNotEmpty)
                                   GridView.count(
                                       crossAxisCount: 5,
                                       shrinkWrap: true,
@@ -253,7 +246,7 @@ class _IngredientState extends State<Ingredient> {
                                                           imgList
                                                               .removeAt(index);
                                                           deleteIngredients(
-                                                              userID,
+                                                              currentUserID!.uid,
                                                               nameList,
                                                               imgList);
                                                           Navigator.pop(
@@ -273,7 +266,8 @@ class _IngredientState extends State<Ingredient> {
                                           },
                                         ));
                                       })),
-                                if(userID!='user1')
+                                // if(userID!='user1')
+                                if(nameList.isEmpty && selected.isEmpty)
                                   Container(
                                     child: Column(
                                       children: <Widget>[
@@ -362,12 +356,31 @@ class _IngredientState extends State<Ingredient> {
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(20.0))),
                                   onPressed: () {
-                                  //  RecipeListPage
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 RecipeListPage()));
+                                  },
+                                ),
+                                SizedBox(height: 5,),
+                                RaisedButton(
+                                  child: Text(
+                                    '차트 보기',
+                                    style: TextStyle(
+                                        fontSize: 20, color: Colors.white),
+                                  ),
+                                  color: Colors.deepOrange,
+                                  padding: EdgeInsets.fromLTRB(55, 15, 55, 15),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20.0))),
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ChartPage()));
                                   },
                                 ),
                               ],
