@@ -12,6 +12,8 @@ import 'model/category_model.dart';
 import 'bookmark.dart';
 import 'package:recipe_project/search.dart';
 
+import 'model/login.dart';
+
 class Ingredient extends StatefulWidget {
   @override
   _IngredientState createState() => _IngredientState();
@@ -62,14 +64,25 @@ class _IngredientState extends State<Ingredient> {
     List nameList = [];
     List imgList = [];
 
-    FirebaseFirestore.instance
-        .collection('selectedIngredients')
-        .doc('$userID')
-        .get()
-        .then((DocumentSnapshot document) {
-      imgList.addAll(document['img']);
-      nameList.addAll(document['name']);
-    });
+    if(googlelogin == true) {
+      FirebaseFirestore.instance
+          .collection('selectedIngredients')
+          .doc('${currentUserID!.uid}')
+          .get()
+          .then((DocumentSnapshot document) {
+        imgList.addAll(document['img']);
+        nameList.addAll(document['name']);
+      });
+    } else if(selected.length > 0) {
+      FirebaseFirestore.instance
+          .collection('selectedIngredients')
+          .doc('${currentUserID!.uid}')
+          .get()
+          .then((DocumentSnapshot document) {
+        imgList.addAll(document['img']);
+        nameList.addAll(document['name']);
+      });
+    }
 
     return DefaultTabController(
       child: Scaffold(
@@ -155,8 +168,9 @@ class _IngredientState extends State<Ingredient> {
                                 IconButton(
                                   icon: Icon(Icons.add),
                                   onPressed: () {
-                                    if (userID != 'user1')
-                                      addIngredients(userID);
+                                    // if (userID != 'user1')
+                                    if(googlelogin == false)
+                                      addIngredients(currentUserID!.uid);
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -167,7 +181,8 @@ class _IngredientState extends State<Ingredient> {
                                                 )));
                                   },
                                 ),
-                                if (userID == 'user1')
+                                // if (userID == 'user1')
+                                if(nameList.isNotEmpty)
                                   GridView.count(
                                       crossAxisCount: 5,
                                       shrinkWrap: true,
@@ -209,7 +224,7 @@ class _IngredientState extends State<Ingredient> {
                                                           imgList
                                                               .removeAt(index);
                                                           deleteIngredients(
-                                                              userID,
+                                                              currentUserID!.uid,
                                                               nameList,
                                                               imgList);
                                                           Navigator.pop(
@@ -229,7 +244,8 @@ class _IngredientState extends State<Ingredient> {
                                           },
                                         ));
                                       })),
-                                if(userID!='user1')
+                                // if(userID!='user1')
+                                if(nameList.isEmpty && selected.isEmpty)
                                   Container(
                                     child: Column(
                                       children: <Widget>[
@@ -328,7 +344,7 @@ class _IngredientState extends State<Ingredient> {
                                 SizedBox(height: 5,),
                                 RaisedButton(
                                   child: Text(
-                                    '요리 보기',
+                                    '차트 보기',
                                     style: TextStyle(
                                         fontSize: 20, color: Colors.white),
                                   ),

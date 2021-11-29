@@ -79,6 +79,7 @@ class _LoginState extends State<Login> {
                 await signInWithGoogle();
                 if (currentUserID != null) {
                   print('GOOGLE LOGIN');
+                  print('<USER ID>:: ${currentUserID!.uid}');
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => Ingredient()));
                 }
@@ -93,7 +94,8 @@ class _LoginState extends State<Login> {
                 googlelogin = false;
                 await _auth.signInAnonymously();
                 if (currentUserID != null) {
-                  print('GEUST LOGIN');
+                  print('GUEST LOGIN');
+                  print('<USER ID>:: ${currentUserID!.uid}');
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => Ingredient()));
                 }

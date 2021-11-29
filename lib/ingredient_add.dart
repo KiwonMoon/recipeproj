@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:intl/intl.dart';
+import 'package:recipe_project/model/login.dart';
 
 class AddIngredient extends StatefulWidget {
   var nameList, imgList;
@@ -63,7 +64,7 @@ class _AddIngredientState extends State<AddIngredient> {
             selectedMap[product.name] = product.img;
             print('<<map>>\n');
             print(selectedMap);
-            addIngredients(userID, product.name, product.img);
+            addIngredients(currentUserID!.uid, product.name, product.img);
           },
         ),
       );
@@ -112,7 +113,7 @@ class _AddIngredientState extends State<AddIngredient> {
             selectedMap[product.name] = product.img;
             print('<<map>>\n');
             print(selectedMap);
-            addIngredients(userID, product.name, product.img);
+            addIngredients(currentUserID!.uid, product.name, product.img);
           },
         ),
       );
@@ -161,7 +162,8 @@ class _AddIngredientState extends State<AddIngredient> {
             selectedMap[product.name] = product.img;
             print('<<map>>\n');
             print(selectedMap);
-            addIngredients(userID, product.name, product.img);
+            // addIngredients(userID, product.name, product.img);
+            addIngredients(currentUserID!.uid, product.name, product.img);
           },
         ),
       );
@@ -281,4 +283,4 @@ class _AddIngredientState extends State<AddIngredient> {
   }
 }
 
-String userID = 'user1';
+// String userID = 'user1';
