@@ -64,7 +64,7 @@ class ChartLine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      final lineWidget = constraints.maxWidth * rate;
+      final lineWidget = constraints.maxWidth * rate*0.8;
       return Padding(
         padding: const EdgeInsets.only(bottom: 10.0),
         child: Column(

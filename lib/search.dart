@@ -8,6 +8,7 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
+  List<String> emptyList = [""];
   // FocusNode myFocusNode;
   final TextEditingController myController = TextEditingController();
 
