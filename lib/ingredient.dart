@@ -191,7 +191,7 @@ class _IngredientState extends State<Ingredient> {
                                   icon: Icon(Icons.add),
                                   onPressed: () {
                                     // if (userID != 'user1')
-                                    if(googlelogin == false)
+                                    if(googlelogin == false && nameList.isEmpty)
                                       addIngredients(currentUserID!.uid);
                                     Navigator.push(
                                         context,

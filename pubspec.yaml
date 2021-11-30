@@ -65,10 +65,13 @@ flutter:
      - images/grain/potato.png
      - images/grain/sweet_potato.png
      - images/meat/chicken.png
+     - images/meat/chicken2.png
      - images/meat/chop.png
+     - images/meat/chop2.png
      - images/meat/lamb.png
      - images/processed/canned.png
      - images/processed/cheese.png
+     - images/processed/cheese2.png
      - images/processed/eggs.png
      - images/processed/milk.png
      - images/category/chicken.png

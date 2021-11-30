@@ -37,7 +37,7 @@ class IngredientsRepository {
           category: Category.meat,
           name: '소고기',
           id: 6,
-          img: 'images/meat/chop.png'),
+          img: 'images/meat/chop2.png'),
       IngredientModel(
           category: Category.meat,
           name: '닭고기',
@@ -47,7 +47,7 @@ class IngredientsRepository {
           category: Category.meat,
           name: '오리',
           id: 8,
-          img: 'images/meat/chicken.png'),
+          img: 'images/meat/chicken2.png'),
       IngredientModel(
           category: Category.meat,
           name: '양고기',
@@ -72,7 +72,7 @@ class IngredientsRepository {
           category: Category.processed,
           name: '모짜렐라 치즈',
           id: 12,
-          img: 'images/processed/cheese.png'),
+          img: 'images/processed/cheese2.png'),
       IngredientModel(
           category: Category.processed,
           name: '참치캔',
