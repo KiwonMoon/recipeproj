@@ -21,6 +21,18 @@ class Ingredient extends StatefulWidget {
 }
 
 class _IngredientState extends State<Ingredient> {
+  List<String> searchNameList = [];
+  Future<void> getData() async {
+    QuerySnapshot snap = await
+    FirebaseFirestore.instance.collection('recipe').get();
+    var titleSearch;
+    snap.docs.forEach((document) {
+      titleSearch = document.data();
+      searchNameList.add(titleSearch['recipeTitle']);
+    });
+    print('searchNameList::: $searchNameList');
+  }
+
   List<Card> _buildGridCategory(BuildContext context) {
     List<CategoryModel> products = CategoryRepository.loadCategories();
 
@@ -95,7 +107,8 @@ class _IngredientState extends State<Ingredient> {
               semanticLabel: 'search',
             ),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => Search()),);
+              getData();
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Search(recipeList: searchNameList)),);
             },
           ),
           actions: <Widget>[

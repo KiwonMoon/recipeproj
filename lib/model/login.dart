@@ -69,6 +69,8 @@ class _LoginState extends State<Login> {
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             SizedBox(
               height: 50,

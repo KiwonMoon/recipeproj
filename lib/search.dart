@@ -1,20 +1,31 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+
 
 class Search extends StatefulWidget {
+  List<String> recipeList;
+  Search({required this.recipeList});
   @override
   _SearchState createState() => _SearchState();
 }
 
 class _SearchState extends State<Search> {
   List<String> emptyList = [""];
+  List<String> items = [];
+  String recipeName = '';
+  String searchText = '';
+  bool _IsClick = false;
+  // List<String> searchNameList = [];
   // FocusNode myFocusNode;
   final TextEditingController myController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    _IsClick = false;
     // myFocusNode = FocusNode();
   }
 
@@ -41,7 +52,7 @@ class _SearchState extends State<Search> {
             child: Column(
               children: <Widget>[
                 Container(
-                  width: 380,
+                  width: widthSize*0.95,
                   height: 60,
                   decoration: BoxDecoration(
                     color: Colors.deepOrange[50],
@@ -69,7 +80,9 @@ class _SearchState extends State<Search> {
                               focusedBorder: UnderlineInputBorder(
                                   borderSide:
                                   BorderSide(color: Colors.white))),
-                          onChanged: (text) {},
+                          onChanged: (text) {
+                            recipeName = text;
+                          },
                         ),
                       ),
                       Container(
@@ -82,7 +95,15 @@ class _SearchState extends State<Search> {
                             color: Colors.deepOrange,
                           ),
                           iconSize: 30,
-                          onPressed: () {},
+                          onPressed: () {
+                            // getData();
+                            setState(() {
+                              recipeName = recipeName;
+                              // _buildList();
+                              _IsClick = true;
+                            });
+                            // print(searchNameList);
+                          },
                         ),
                       ),
                       Container(
@@ -97,6 +118,7 @@ class _SearchState extends State<Search> {
                           onPressed: () {
                             setState(() {
                               myController.clear();
+                              _IsClick = false;
                             });
                           },
                         ),
@@ -104,11 +126,84 @@ class _SearchState extends State<Search> {
                     ],
                   ),
                 ),
+                if(_IsClick == true)
+                  Padding(
+                    padding: EdgeInsets.all(0),
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          height: 360,
+                          child: ListView(
+                            scrollDirection: Axis.vertical,
+                            padding: EdgeInsets.fromLTRB(5, 3, 5, 3),
+                            children: _IsClick ? _searchList():_buildList(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+  // Future<void>searchData(String name) async{
+  //   List<DocumentSnapshot> templist;
+  //   List<Map<dynamic, dynamic>> list = [];
+  //   Future<QuerySnapshot> lists;
+  //   lists = FirebaseFirestore.instance
+  //       .collection('recipe')
+  //       .where('$name', isGreaterThanOrEqualTo: '$name')
+  //       .get();
+  //
+  //   templist = lists;
+  // }
+
+  List<itemName> _buildList() {
+    return emptyList.map((contact) => new itemName(contact)).toList();
+  }
+
+  List<RecipeTile> _searchList() {
+    widget.recipeList.map((contact) => RecipeTile(contact)).toList();
+    // items.map((contact) => RecipeTile(contact)).toList();
+    List<String> _searchList = [];
+    for(int i =0; i<widget.recipeList.length; i++) {
+      String name = widget.recipeList.elementAt(i);
+      if(name.toLowerCase().contains(recipeName.toLowerCase())){
+        _searchList.add(name);
+      }
+    }
+    // return searchNameList.map((contact) => RecipeTile(contact)).toList();
+    return _searchList.map((contact) => RecipeTile(contact)).toList();
+  }
+}
+
+
+class itemName extends StatelessWidget {
+  final String name;
+  itemName(this.name);
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      contentPadding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+      title: Text(this.name),
+    );
+  }
+}
+
+class RecipeTile extends StatelessWidget {
+  final String name;
+  RecipeTile(this.name);
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      contentPadding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+      title: Text(this.name),
+      onTap: (){
+        print('tap : ${this.name}');
+      },
     );
   }
 }
