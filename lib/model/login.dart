@@ -72,8 +72,14 @@ class _LoginState extends State<Login> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            SizedBox(
-              height: 50,
+            SizedBox(height: 70.0),
+            Column(
+              children: <Widget>[
+                Image.asset('images/recipe.png'),
+                const SizedBox(height: 16.0),
+                Text('MY RECIPE', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.deepOrange),),
+                SizedBox(height: 60,),
+              ],
             ),
             FlatButton(
               color: Colors.red.withOpacity(0.3),
@@ -103,14 +109,14 @@ class _LoginState extends State<Login> {
                 }
               },
             ),
-            FlatButton(
-              color: Colors.grey.withOpacity(0.3),
-              child: const Text('NEXT'),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Ingredient()));
-              },
-            ),
+            // FlatButton(
+            //   color: Colors.grey.withOpacity(0.3),
+            //   child: const Text('NEXT'),
+            //   onPressed: () {
+            //     Navigator.push(context,
+            //         MaterialPageRoute(builder: (context) => Ingredient()));
+            //   },
+            // ),
           ],
         ),
       ),

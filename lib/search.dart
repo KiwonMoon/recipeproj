@@ -187,7 +187,7 @@ class itemName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+      contentPadding: EdgeInsets.fromLTRB(20, 0, 8, 0),
       title: Text(this.name),
     );
   }
@@ -199,7 +199,7 @@ class RecipeTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+      contentPadding: EdgeInsets.fromLTRB(28, 0, 8, 0),
       title: Text(this.name),
       onTap: (){
         print('tap : ${this.name}');
