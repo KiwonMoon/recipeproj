@@ -64,16 +64,43 @@ flutter:
      - images/grain/flour.png
      - images/grain/potato.png
      - images/grain/sweet_potato.png
+     - images/fruit/apple.png
+     - images/fruit/banana.png
+     - images/fruit/grape.png
+     - images/fruit/orange.png
+     - images/fruit/peach.png
      - images/meat/chicken.png
      - images/meat/chicken2.png
      - images/meat/chop.png
      - images/meat/chop2.png
      - images/meat/lamb.png
+     - images/meat/bacon.png
+     - images/meat/ham.png
+     - images/meat/meatballs.png
+     - images/meat/spam.png
      - images/processed/canned.png
      - images/processed/cheese.png
      - images/processed/cheese2.png
      - images/processed/eggs.png
      - images/processed/milk.png
+     - images/processed/yogurt.png
+     - images/seafood/fish.png
+     - images/seafood/octopus.png
+     - images/seafood/seaweed.png
+     - images/seafood/shell.png
+     - images/seafood/shrimp.png
+     - images/seafood/squid.png
+     - images/vegetable/broccoli.png
+     - images/vegetable/cabbage.png
+     - images/vegetable/carrot.png
+     - images/vegetable/chili.png
+     - images/vegetable/cucumber.png
+     - images/vegetable/garlic.png
+     - images/vegetable/green-onion.png
+     - images/vegetable/kimchi.png
+     - images/vegetable/mushrooms.png
+     - images/vegetable/onion.png
+     - images/vegetable/paprika.png
      - images/category/chicken.png
      - images/category/chinesefood.png
      - images/category/japanfood.png

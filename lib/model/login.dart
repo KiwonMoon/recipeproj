@@ -77,7 +77,7 @@ class _LoginState extends State<Login> {
               children: <Widget>[
                 Image.asset('images/recipe.png'),
                 const SizedBox(height: 16.0),
-                Text('MY RECIPE', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.deepOrange),),
+                Text('MY RECIPE', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.redAccent),),
                 SizedBox(height: 60,),
               ],
             ),
