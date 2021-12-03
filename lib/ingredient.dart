@@ -19,8 +19,21 @@ class Ingredient extends StatefulWidget {
   @override
   _IngredientState createState() => _IngredientState();
 }
-
+List bookmarkImg = [];
+List bookmarkTitle = [];
 class _IngredientState extends State<Ingredient> {
+  List<String> searchNameList = [];
+  Future<void> getData() async {
+    QuerySnapshot snap = await
+    FirebaseFirestore.instance.collection('recipe').get();
+    var titleSearch;
+    snap.docs.forEach((document) {
+      titleSearch = document.data();
+      searchNameList.add(titleSearch['recipeTitle']);
+    });
+    print('searchNameList::: $searchNameList');
+  }
+
   List<Card> _buildGridCategory(BuildContext context) {
     List<CategoryModel> products = CategoryRepository.loadCategories();
 
@@ -74,6 +87,14 @@ class _IngredientState extends State<Ingredient> {
         imgList.addAll(document['img']);
         nameList.addAll(document['name']);
       });
+        FirebaseFirestore.instance
+            .collection('bookmark')
+            .doc('${currentUserID!.uid}')
+            .get()
+            .then((DocumentSnapshot document) {
+          bookmarkImg.addAll(document['img']);
+          bookmarkTitle.addAll(document['recipeTitle']);
+        });
     } else if(selected.length > 0) {
       FirebaseFirestore.instance
           .collection('selectedIngredients')
@@ -95,7 +116,8 @@ class _IngredientState extends State<Ingredient> {
               semanticLabel: 'search',
             ),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => Search()),);
+              getData();
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Search(recipeList: searchNameList)),);
             },
           ),
           actions: <Widget>[
@@ -191,7 +213,7 @@ class _IngredientState extends State<Ingredient> {
                                   icon: Icon(Icons.add),
                                   onPressed: () {
                                     // if (userID != 'user1')
-                                    if(googlelogin == false)
+                                    if(googlelogin == false && nameList.isEmpty)
                                       addIngredients(currentUserID!.uid);
                                     Navigator.push(
                                         context,
