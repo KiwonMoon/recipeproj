@@ -63,9 +63,11 @@ class _BookmarkPageState extends State<BookmarkPage> {
           onDismissed: (direction) {
             setState(() {
               bookmarkTitle.removeAt(index);
+              bookmarkImg.removeAt(index);
             });
             ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('$item deleted')));
+            deleteBookmark(currentUserID!.uid, bookmarkTitle, bookmarkImg);
           },
           background: Container(
             color: Colors.red,
@@ -94,5 +96,20 @@ class _BookmarkPageState extends State<BookmarkPage> {
       },
     ),
     );
+  }
+  Future<void> deleteBookmark(String userID, List title, List img) async {
+    FirebaseFirestore.instance
+        .collection('bookmark')
+        .doc(userID)
+        .delete();
+    FirebaseFirestore.instance
+        .collection('bookmark')
+        .doc(userID)
+        .set({
+      'recipeTitle': FieldValue.arrayUnion(title),
+      'img': FieldValue.arrayUnion(img),
+    }).then((value) {
+      print('DELETE BOOKMARK SUCCESS');
+    }).catchError((error) => print("Failed to delete product: $error"));
   }
 }

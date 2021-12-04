@@ -80,21 +80,39 @@ class _IngredientState extends State<Ingredient> {
 
     if(googlelogin == true) {
       FirebaseFirestore.instance
-          .collection('selectedIngredients')
-          .doc('${currentUserID!.uid}')
+          .collection('selectedIngredients')//nJUyGFy03UQtfVIAEnCcraydKA53
+          .doc('nJUyGFy03UQtfVIAEnCcraydKA53')
           .get()
           .then((DocumentSnapshot document) {
         imgList.addAll(document['img']);
         nameList.addAll(document['name']);
       });
-        FirebaseFirestore.instance
-            .collection('bookmark')
-            .doc('${currentUserID!.uid}')
-            .get()
-            .then((DocumentSnapshot document) {
-          bookmarkImg.addAll(document['img']);
-          bookmarkTitle.addAll(document['recipeTitle']);
-        });
+      FirebaseFirestore.instance
+          .collection('bookmark')
+          .doc('nJUyGFy03UQtfVIAEnCcraydKA53')
+          .get()
+          .then((DocumentSnapshot document) {
+        bookmarkImg.addAll(document['img']);
+        bookmarkTitle.addAll(document['recipeTitle']);
+
+      });
+      // FirebaseFirestore.instance
+      //     .collection('selectedIngredients')//nJUyGFy03UQtfVIAEnCcraydKA53
+      //     .doc('${currentUserID!.uid}')
+      //     .get()
+      //     .then((DocumentSnapshot document) {
+      //   imgList.addAll(document['img']);
+      //   nameList.addAll(document['name']);
+      // });
+      //   FirebaseFirestore.instance
+      //       .collection('bookmark')
+      //       .doc('${currentUserID!.uid}')
+      //       .get()
+      //       .then((DocumentSnapshot document) {
+      //     bookmarkImg.addAll(document['img']);
+      //     bookmarkTitle.addAll(document['recipeTitle']);
+      //
+      //   });
     } else if(selected.length > 0) {
       FirebaseFirestore.instance
           .collection('selectedIngredients')
@@ -213,7 +231,8 @@ class _IngredientState extends State<Ingredient> {
                                   icon: Icon(Icons.add),
                                   onPressed: () {
                                     // if (userID != 'user1')
-                                    if(googlelogin == false && nameList.isEmpty)
+                                    // if(googlelogin == false && nameList.isEmpty)
+                                    if(nameList.isEmpty)
                                       addIngredients(currentUserID!.uid);
                                     Navigator.push(
                                         context,
