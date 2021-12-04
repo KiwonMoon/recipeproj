@@ -86,7 +86,7 @@ class _IngredientState extends State<Ingredient> {
           .then((DocumentSnapshot document) {
         imgList.addAll(document['img']);
         nameList.addAll(document['name']);
-      }).catchError((){imgList = []; nameList=[];});
+      });
         FirebaseFirestore.instance
             .collection('bookmark')
             .doc('${currentUserID!.uid}')
