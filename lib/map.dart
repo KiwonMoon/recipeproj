@@ -5,7 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_place/google_place.dart';
 import 'package:location/location.dart' as LocationManager;
-
+import 'detailpage.dart';
 
 //codelab
 // class MapPage extends StatefulWidget {
@@ -59,7 +59,6 @@ import 'package:location/location.dart' as LocationManager;
 //     );
 //   }
 // }
-
 
 // 자기 위치 + 주변 음식점 시도 중
 // final places =
@@ -206,41 +205,62 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  late Future <Position> _currentLocation;
+  late Future<Position> _currentLocation;
   late GooglePlace googlePlace;
-  Set <Marker> _markers = {};
+  late String nextToken;
+  Set<Marker> _markers = {};
 
   @override
   void initState() {
-    googlePlace = GooglePlace("AIzaSyAfJ9_bp3dmxJfOga_BAOS-Gppkc1a6Mhw");
+    googlePlace = GooglePlace("AIzaSyDccuAeeo8AFsOOUWJx0MwOrq7Lq-_YvgQ");
     _currentLocation = Geolocator.getCurrentPosition();
-    print("현재위치는??");
-    print(_currentLocation);
     super.initState();
   }
 
-  void findPlaces(LatLng userLocation) async {
+  void findPlaces(LatLng userLocation, String token) async {
 
     print(userLocation.latitude);
     print(userLocation.longitude);
 
     var result = await googlePlace.search.getNearBySearch(
-      Location(lat: userLocation.latitude, lng: userLocation.longitude), 5000);
+        Location(lat: userLocation.latitude, lng: userLocation.longitude), 3000,
+        type: "restaurant", rankby: RankBy.Distance);
+
+    print(result.toString());
 
     if(result != null) {
-      print(result.results.toString());
+      Set<Marker> _restaurantMarkers = result.results!
+          .map((result) => Marker(
+          markerId: MarkerId(result.name!),
+          icon: BitmapDescriptor.defaultMarkerWithHue(
+              BitmapDescriptor.hueOrange),
+          infoWindow: InfoWindow(
+              title: result.name,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailsPage(
+                      placeId: result.placeId!,
+                      googlePlace: googlePlace,
+                    ),
+                  ),
+                );
+              },
+              snippet:
+              "Ratings: " + (result.rating?.toString() ?? "Not Rated")),
+          position: LatLng(result.geometry!.location!.lat!,
+              result.geometry!.location!.lng!)))
+          .toSet();
+
+      if(_markers.length == 1) {
+        setState(() {
+          _markers.addAll(_restaurantMarkers);
+        });
+      }
+    } else {
+      findPlaces(userLocation, "");
     }
-    // Set < Marker > _restaurantMarkers = result.results!.map((result) => Marker(
-    //   markerId: MarkerId(result.name!),
-    //   icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
-    //     infoWindow: InfoWindow(
-    //         title: result.name,
-    //         snippet: "Ratings: "),
-    //     position: LatLng(
-    //         result.geometry!.location!.lat!, result.geometry!.location!.lng!))).toSet();
-    //
-    //
-    // print(_restaurantMarkers.toString());
   }
 
   @override
@@ -264,19 +284,23 @@ class _MapPageState extends State<MapPage> {
                 if (snapshot.hasData) {
                   // The user location returned from the snapshot
                   Position snapshotData = snapshot.data as Position;
-                  LatLng _userLocation = LatLng(
-                      snapshotData.latitude, snapshotData.longitude);
-                  findPlaces(_userLocation);
-                  return GoogleMap(
-                    initialCameraPosition: CameraPosition(
-                      target: _userLocation,
-                      zoom: 12,
-                    ),
-                    markers: _markers
-                      ..add(Marker(
-                          markerId: MarkerId("User Location"),
-                          infoWindow: InfoWindow(title: "User Location"),
-                          position: _userLocation)),
+                  LatLng _userLocation =
+                  LatLng(snapshotData.latitude, snapshotData.longitude);
+                  findPlaces(_userLocation, "");
+                  return Stack(
+                    children: [
+                      GoogleMap(
+                        initialCameraPosition: CameraPosition(
+                          target: _userLocation,
+                          zoom: 17.5,
+                        ),
+                        markers: _markers
+                          ..add(Marker(
+                              markerId: MarkerId("User Location"),
+                              infoWindow: InfoWindow(title: "User Location"),
+                              position: _userLocation)),
+                      ),
+                    ],
                   );
                 } else {
                   return Center(child: Text("Failed to get user location."));
