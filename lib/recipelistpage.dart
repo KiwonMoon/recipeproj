@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'recipeaddpage.dart';
 import 'recipedetailpage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'model/recipe_model.dart';
 
 class RecipeListPage extends StatelessWidget {
   const RecipeListPage({Key? key}) : super(key: key);
 
   static const mainColor = Color(0x80E33B1E);
   static const mainBackgroundColor = Color(0xffE598BB);
-  // static const mainfont = "Himelody";
+
 
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: mainBackgroundColor,
       appBar: AppBar(
@@ -27,46 +30,63 @@ class RecipeListPage extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.bookmark_border_outlined, color: Colors.black, size: 33.0,),
-            onPressed: (){},
+            onPressed: (){
+
+            },
           ),
         ],
       ),
-      body: ListView.builder(
-          itemCount: 5,
-          itemBuilder: (BuildContext context, int index){
-            return InkWell(
-              onTap: (){
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => RecipeDetailPage()));
-              },
-              child: Card(
-                child: Row(
-                  children: [
-                    Flexible(
-                      flex: 1,
-                      child: Card(
-                        child: Image.asset('images/grain/corn.png'),
-                      ),
-                    ),
-                    Flexible(
-                      flex: 1,
-                      child: ListTile(
-                        title: Container(
-                          padding: EdgeInsets.fromLTRB(0, 0, 0, 20.0),
-                          child: Center(
-                            child: Text('해물 파전', style: TextStyle(fontSize: 20.0),),
-                          ),
+      body: Center(
+        child: StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance.collection('recipe').snapshots(),
+          builder: (context, snapshot){
+            if(snapshot.connectionState == ConnectionState.waiting){
+              return CircularProgressIndicator();
+            }
+
+            return ListView.builder(
+              itemCount: snapshot.data?.docs.length,
+              itemBuilder: (ctx, index) => InkWell(
+                onTap: (){
+                  RecipeModel recipemodel = RecipeModel(recipetitle: snapshot.data?.docs[index]['recipetitle'],
+                  recipeinfo: snapshot.data?.docs[index]['recipetitle'], imagepath: snapshot.data?.docs[index]['imagepath'],
+                  peoplecount: snapshot.data?.docs[index]['peoplecount'], cookingtime: snapshot.data?.docs[index]['cookingtime'],
+                  difficulty: snapshot.data?.docs[index]['difficulty'], ingredientlist: snapshot.data?.docs[index]['ingredientlist'],
+                  quantitylist: snapshot.data?.docs[index]['quantitylist'], cookinfolist: snapshot.data?.docs[index]['cookinfolist'],
+                  cookimglist: snapshot.data?.docs[index]['cookimglist']);
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => RecipeDetailPage(recipemodel: recipemodel)));
+                },
+                child: Card(
+                  child: Row(
+                    children: [
+                      Flexible(
+                        flex: 1,
+                        child: Card(
+                          child: Image.network(snapshot.data?.docs[index]['imagepath']),
                         ),
-                        isThreeLine: true,
-                        subtitle: Text('“파전의 재발견 - 달짝지근한 파와 고소한 불고기로 즐거운 식탁을 만들어 보세요”', ),
-                        dense: true,
                       ),
-                    ),
-                  ],
+                      Flexible(
+                        flex: 1,
+                        child: ListTile(
+                          title: Container(
+                            padding: EdgeInsets.fromLTRB(0, 0, 0, 20.0),
+                            child: Center(
+                              child: Text(snapshot.data?.docs[index]['recipetitle'], style: TextStyle(fontSize: 20.0),),
+                            ),
+                          ),
+                          isThreeLine: true,
+                          subtitle: Text(snapshot.data?.docs[index]['recipeinfo'],),
+                          dense: true,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
-          }
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),

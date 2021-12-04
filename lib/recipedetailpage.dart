@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
+import 'model/recipe_model.dart';
 
 
-class RecipeDetailPage extends StatelessWidget {
-  const RecipeDetailPage({Key? key}) : super(key: key);
+class RecipeDetailPage extends StatefulWidget {
+  final RecipeModel recipemodel;
+  const RecipeDetailPage({required this.recipemodel});
 
   static const mainColor = Color(0x80E33B1E);
-  // static const mainfont = "Himelody";
+
+  @override
+  State<RecipeDetailPage> createState() => _RecipeDetailPageState();
+}
+
+class _RecipeDetailPageState extends State<RecipeDetailPage> {
+
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +21,7 @@ class RecipeDetailPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: mainColor, size: 30.0,),
+          icon: Icon(Icons.arrow_back, color: RecipeDetailPage.mainColor, size: 30.0,),
           onPressed: (){
             Navigator.pop(context);
           },
@@ -26,28 +34,25 @@ class RecipeDetailPage extends StatelessWidget {
         child: Container(
           child: Column(
             children: [
-              Image.asset(
-                'images/category/ramen.png',
-                width: 600,
-                height: 240,
-                fit: BoxFit.cover,
-              ),
+              Image.network(widget.recipemodel.imagepath, width: 600, height: 240, fit: BoxFit.cover,),
               ListTile(
                 trailing: IconButton(
                   icon: Icon(Icons.bookmark_border_outlined, color: Colors.black, size: 30.0,),
-                  onPressed: (){},
+                  onPressed: (){
+                    print(widget.recipemodel.recipetitle);
+                  },
                 ),
               ),
               ListTile(
                 title: Container(
                   child: Center(
-                    child: Text('해물 파전', style: TextStyle(fontSize: 30),),
+                    child: Text(widget.recipemodel.recipetitle, style: TextStyle(fontSize: 30),),
                   ),
                 ),
                 subtitle: Container(
                   padding: EdgeInsets.fromLTRB(0, 20, 0, 50),
                   child: Center(
-                    child: Text('“파전의 재발견 - 달짝지근한 파와 고소한 불고기로 즐거운 식탁을 만들어 보세요”'),
+                    child: Text(widget.recipemodel.recipeinfo),
                   ),
                 ),
                 isThreeLine: true,
@@ -63,7 +68,7 @@ class RecipeDetailPage extends StatelessWidget {
                           Icon(
                             Icons.person_outline,
                           ),
-                          Text('2인분', style: TextStyle(fontSize: 11.0,),),
+                          Text(widget.recipemodel.peoplecount, style: TextStyle(fontSize: 11.0,),),
                         ],
                       ),
                       padding: EdgeInsets.all(25.0),
@@ -74,7 +79,7 @@ class RecipeDetailPage extends StatelessWidget {
                           Icon(
                             Icons.access_time,
                           ),
-                          Text('30분 이내', style: TextStyle(fontSize: 11.0,),),
+                          Text(widget.recipemodel.cookingtime, style: TextStyle(fontSize: 11.0,),),
                         ],
                       ),
                       padding: EdgeInsets.all(25.0),
@@ -85,7 +90,7 @@ class RecipeDetailPage extends StatelessWidget {
                           Icon(
                             Icons.star_border,
                           ),
-                          Text('초급', style: TextStyle(fontSize: 11.0,),),
+                          Text(widget.recipemodel.difficulty, style: TextStyle(fontSize: 11.0,),),
                         ],
                       ),
                       padding: EdgeInsets.all(25.0),
@@ -98,7 +103,7 @@ class RecipeDetailPage extends StatelessWidget {
                   indent: 15,
                   endIndent: 15,
                   thickness: 1,
-                  color: mainColor,
+                  color: RecipeDetailPage.mainColor,
                 ),
               ),
               Container(
@@ -130,7 +135,7 @@ class RecipeDetailPage extends StatelessWidget {
                     ),
                     ListView.builder(
                       shrinkWrap: true,
-                      itemCount: 5,
+                      itemCount: widget.recipemodel.ingredientlist.length,
                       itemBuilder: (BuildContext context, int index){
                         return Column(
                           children: [
@@ -141,14 +146,14 @@ class RecipeDetailPage extends StatelessWidget {
                                   flex: 1,
                                   child: Container(
                                       width: MediaQuery.of(context).size.width,
-                                      child: Text('쪽파', style: TextStyle(fontSize: 12.0),)
+                                      child: Text(widget.recipemodel.ingredientlist[index], style: TextStyle(fontSize: 12.0),)
                                   ),
                                 ),
                                 Flexible(
                                   flex: 1,
                                   child: Container(
                                       width: MediaQuery.of(context).size.width,
-                                      child: Text('두줌', style: TextStyle(fontSize: 12.0),)
+                                      child: Text(widget.recipemodel.quantitylist[index], style: TextStyle(fontSize: 12.0),)
                                   ),
                                 ),
                               ],
@@ -192,7 +197,7 @@ class RecipeDetailPage extends StatelessWidget {
                     ),
                     ListView.builder(
                       shrinkWrap: true,
-                      itemCount: 3,
+                      itemCount: widget.recipemodel.cookinfolist.length,
                       itemBuilder: (BuildContext context, int index){
                         return Container(
                           margin: EdgeInsets.only(bottom: 5.0),
@@ -200,21 +205,21 @@ class RecipeDetailPage extends StatelessWidget {
                             children: [
                               Flexible(
                                 flex: 7,
-                                child: Image.asset('images/grain/corn.png',),
+                                child: Image.network(widget.recipemodel.cookimglist[index]),
                               ),
                               Spacer(
                                 flex: 1,
                               ),
                               Flexible(
                                 flex: 1,
-                                child: Text('1'),
+                                child: Text((widget.recipemodel.cookinfolist.length + 1).toString()),
                               ),
                               Spacer(
                                 flex: 1,
                               ),
                               Flexible(
                                 flex: 10,
-                                child: Text('대파는 길게 4등분 한 후 프라이팬 지름에 맞춰 3~4등분하여 준비한다.', style: TextStyle(fontSize: 11.0),),
+                                child: Text(widget.recipemodel.cookinfolist[index], style: TextStyle(fontSize: 11.0),),
                               ),
                             ],
                           ),

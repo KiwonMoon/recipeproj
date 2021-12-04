@@ -19,7 +19,8 @@ class Ingredient extends StatefulWidget {
   @override
   _IngredientState createState() => _IngredientState();
 }
-
+List bookmarkImg = [];
+List bookmarkTitle = [];
 class _IngredientState extends State<Ingredient> {
   List<String> searchNameList = [];
   Future<void> getData() async {
@@ -86,6 +87,14 @@ class _IngredientState extends State<Ingredient> {
         imgList.addAll(document['img']);
         nameList.addAll(document['name']);
       });
+        FirebaseFirestore.instance
+            .collection('bookmark')
+            .doc('${currentUserID!.uid}')
+            .get()
+            .then((DocumentSnapshot document) {
+          bookmarkImg.addAll(document['img']);
+          bookmarkTitle.addAll(document['recipeTitle']);
+        });
     } else if(selected.length > 0) {
       FirebaseFirestore.instance
           .collection('selectedIngredients')
