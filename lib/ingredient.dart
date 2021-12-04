@@ -86,7 +86,7 @@ class _IngredientState extends State<Ingredient> {
           .then((DocumentSnapshot document) {
         imgList.addAll(document['img']);
         nameList.addAll(document['name']);
-      });
+      }).catchError((){imgList = []; nameList=[];});
         FirebaseFirestore.instance
             .collection('bookmark')
             .doc('${currentUserID!.uid}')
@@ -213,7 +213,8 @@ class _IngredientState extends State<Ingredient> {
                                   icon: Icon(Icons.add),
                                   onPressed: () {
                                     // if (userID != 'user1')
-                                    if(googlelogin == false && nameList.isEmpty)
+                                    // if(googlelogin == false && nameList.isEmpty)
+                                    if(nameList.isEmpty)
                                       addIngredients(currentUserID!.uid);
                                     Navigator.push(
                                         context,
