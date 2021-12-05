@@ -15,7 +15,7 @@ Future<UserCredential> signInWithGoogle() async {
   final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
   // Obtain the auth details from the request
   final GoogleSignInAuthentication googleAuth =
-      await googleUser!.authentication;
+  await googleUser!.authentication;
   // Create a new credential
   final credential = GoogleAuthProvider.credential(
     accessToken: googleAuth.accessToken,
@@ -88,8 +88,9 @@ class _LoginState extends State<Login> {
                 if (currentUserID != null) {
                   print('GOOGLE LOGIN');
                   print('<USER ID>:: ${currentUserID!.uid}');
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Ingredient()));
+                  saveUser();
+                  // Navigator.push(context,
+                  //     MaterialPageRoute(builder: (context) => Ingredient()));
                 }
               },
               child: Text("Google Login"),
@@ -122,4 +123,39 @@ class _LoginState extends State<Login> {
       ),
     );
   }
+
+
+  Future<dynamic> saveUser() async {
+    var currentUser = _auth.currentUser!;
+
+    CollectionReference users = FirebaseFirestore.instance.collection('bookmark');
+    users.doc(currentUser.uid).get().then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        print('Document data: ${documentSnapshot.data()}');
+        print("ok google sign in");
+        return Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Ingredient()),
+        );
+      } else {
+        print('Document does not exist on the database');
+        users.doc(currentUser.uid).set({
+          'img': [],
+          'recipeTitle': [],
+        }).catchError((error) => print("Failed to add user: $error"))
+            .then((value) {
+          print("ok google sign in");
+          return Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => Ingredient()),
+          );
+        });
+      }
+    });
+  }
+
 }
+
+
