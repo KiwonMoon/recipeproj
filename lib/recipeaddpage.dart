@@ -92,7 +92,7 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
     }
   }
 
-  Future<void> _cookinfouploadFile(String fileName) async {
+  Future<String> _cookinfouploadFile(String fileName) async {
     File file = File(fileName);
     try {
       // 스토리지에 업로드할 파일 경로
@@ -110,11 +110,12 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
 
       // 업로드 완료 후 url
       final downloadUrl = await firebaseStorageRef.getDownloadURL();
-
-      cookimgList.add(downloadUrl);
-      print(cookimgList);
+      return downloadUrl;
+      // cookimgList.add(downloadUrl);
+      // print(cookimgList);
     } catch (e) {
       print(e);
+      return "";
     }
   }
 
@@ -472,7 +473,7 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
                                       flex: 1,
                                       child: Container(
                                           width: MediaQuery.of(context).size.width,
-                                          child: Center(child: Text(index.toString(), style: TextStyle(fontSize: 12.0),))
+                                          child: Center(child: Text((index + 1).toString(), style: TextStyle(fontSize: 12.0),))
                                       ),
                                     ),
                                     Flexible(
@@ -484,10 +485,9 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
                                     ),
                                     Flexible(
                                       flex: 1,
-                                      child: IconButton(
-                                        onPressed: () async => await getcookingImageFromGallery(),
-                                        icon: Icon(Icons.image_outlined),
-                                      ),
+                                      child: cookimgList[index] == ""
+                                          ? Text('No image')
+                                          : Image.network(cookimgList[index], fit: BoxFit.cover,),
                                     ),
                                   ],
                                 ),
@@ -504,52 +504,56 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
                                   builder: (BuildContext context) {
                                     return AlertDialog(
                                         title: Text("Add Todolist"),
-                                        content: Column(
-                                          children: [
-                                            _selectedimage == null ? Text('요리 대표 사진을 등록해 주세요', style: TextStyle(color: RecipeAddPage.fontColor, fontSize: 10.0,),)
-                                            : Image.file(File(_selectedimage!.path), fit: BoxFit.contain,),
-                                            Row(
-                                              children: [
-                                                Flexible(
-                                                  flex: 1,
-                                                  child: Container(
-                                                      width: MediaQuery.of(context).size.width,
-                                                      child: Center(child: Text((cookinfoList.length + 1).toString(), style: TextStyle(fontSize: 12.0),))
+                                        content: SingleChildScrollView(
+                                          child: Column(
+                                            children: [
+                                              _selectedimage == null ? Text('요리 대표 사진을 등록해 주세요', style: TextStyle(color: RecipeAddPage.fontColor, fontSize: 10.0,),)
+                                              : Image.file(File(_selectedimage!.path), fit: BoxFit.contain,),
+                                              Row(
+                                                children: [
+                                                  Flexible(
+                                                    flex: 1,
+                                                    child: Container(
+                                                        width: MediaQuery.of(context).size.width,
+                                                        child: Center(child: Text((cookinfoList.length + 1).toString(), style: TextStyle(fontSize: 12.0),))
+                                                    ),
                                                   ),
-                                                ),
-                                                Flexible(
-                                                  flex: 5,
-                                                  child: Container(
-                                                      width: MediaQuery.of(context).size.width,
-                                                      child: TextField(
-                                                        decoration: InputDecoration(
-                                                            hintText: '예) 대파는 길게 4등분 한 후 프라이팬 지름에 맞춰 3~4등분하여 준비한다.',
-                                                            hintStyle: TextStyle(color: RecipeAddPage.fontColor, fontSize: 10.0,)
+                                                  Flexible(
+                                                    flex: 5,
+                                                    child: Container(
+                                                        width: MediaQuery.of(context).size.width,
+                                                        child: TextField(
+                                                          decoration: InputDecoration(
+                                                              hintText: '예) 대파는 길게 4등분 한 후 프라이팬 지름에 맞춰 3~4등분하여 준비한다.',
+                                                              hintStyle: TextStyle(color: RecipeAddPage.fontColor, fontSize: 10.0,)
+                                                          ),
+                                                          onChanged: (String value) {
+                                                            cookinfoinput = value;
+                                                          },
                                                         ),
-                                                        onChanged: (String value) {
-                                                          cookinfoinput = value;
-                                                        },
-                                                      ),
+                                                    ),
                                                   ),
-                                                ),
-                                                Flexible(
-                                                  flex: 1,
-                                                  child: IconButton(
-                                                    onPressed: () async => await getcookingImageFromGallery(),
-                                                    icon: Icon(Icons.image_outlined),
+                                                  Flexible(
+                                                    flex: 1,
+                                                    child: IconButton(
+                                                      onPressed: () async => await getcookingImageFromGallery(),
+                                                      icon: Icon(Icons.image_outlined),
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
+                                                ],
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                         actions: <Widget>[
-                                          FlatButton(onPressed: (){
-                                            setState(() {
+                                          FlatButton(onPressed: () async{
+                                            Future<String> selectedimagepath = _cookinfouploadFile(_selectedimage!.path);
+                                            String pathpath = await selectedimagepath;
+                                            setState((){
                                               cookinfoList.add(cookinfoinput);
-                                              _cookinfouploadFile(_selectedimage!.path);
+                                              cookimgList.add(pathpath);
                                               print(cookinfoList);
-                                              // print(quantityList);
+                                              print(pathpath);
                                             });
                                             Navigator.of(context).pop();
                                           },
@@ -572,104 +576,5 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
     );
   }
 
-  // Widget ingredientRow() {
-  //   bool flag = true;
-  //   return Column(
-  //     children: [
-  //       Row(
-  //         mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //         children: [
-  //           Flexible(
-  //             flex: 1,
-  //             child: Container(
-  //               width: MediaQuery.of(context).size.width,
-  //               child: TextField(
-  //                 controller: ingredientController,
-  //                 decoration: InputDecoration(
-  //                     hintText: '간장',
-  //                     hintStyle: TextStyle(color: RecipeAddPage.fontColor, fontSize: 10.0,)
-  //                 ),
-  //                 // onChanged: (val) => addIngredientsList(val),
-  //               ),
-  //             ),
-  //           ),
-  //           Flexible(
-  //             flex: 1,
-  //             child: Container(
-  //               width: MediaQuery.of(context).size.width,
-  //               child: TextField(
-  //                 controller: introductionController,
-  //                 decoration: InputDecoration(
-  //                     hintText: '예) 1.5T',
-  //                     hintStyle: TextStyle(color: RecipeAddPage.fontColor, fontSize: 10.0,)
-  //                 ),
-  //               ),
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //       flag ? Center(
-  //         child: RaisedButton(
-  //           child: Text('재료 추가'),
-  //           onPressed: (){
-  //             print(ingredientList);
-  //             flag = false;
-  //           },
-  //         ),
-  //       ) : ingredientRow(),
-  //     ],
-  //   );
-  // }
-
-  // Future<void> addIngredientsList(String name) async{
-  //   ingredientList.add(name);
-  //   print(ingredientList);
-  // }
-
-  // Future<void> addRecipes(String title, String intro) async{
-  //   FirebaseFirestore.instance.collection('recipe').doc(title).update({
-  //     'recipeTitle': '${title}',
-  //     'recipeIntro': '${intro}',
-  //     // 'recipePicPath': '${imgPath}',
-  //   }).then((value) {
-  //     print('RECIPE UPDATED');
-  //   }).catchError((error) => print("Failed to add product: $error"));
-  // }
-
-  // Future<void> addRecipes(String title, String intro) async {
-  //   FirebaseFirestore.instance
-  //       .collection('recipe')
-  //       .doc(title)
-  //       .set({
-  //     'recipeTitle': '${title}',
-  //     'recipeIntro': '${intro}',
-  //   }).then((value) {
-  //     print('RECIPES ADDED');
-  //   }).catchError((error) => print("Failed to add product: $error"));
-  // }
-
-  // await saveImages(_images,sightingRef);
-  // Future<void> saveImages(List<File> _images, DocumentReference ref) async {
-  //   _images.forEach((image) async {
-  //     String imageURL = await uploadFile(image);
-  //     ref.update({"images": FieldValue.arrayUnion([imageURL])});
-  //   });
-  // }
-  //
-  // Future<String> uploadFile(File _image) async {
-  //   FirebaseStorage storage = FirebaseStorage.instance;
-  //   StorageReference storageReference = FirebaseStorage.instance
-  //       .ref()
-  //       .child('sightings/${Path.basename(_image.path)}');
-  //   StorageUploadTask uploadTask = storageReference.putFile(_image);
-  //
-  //   await uploadTask.onComplete;
-  //   print('File Uploaded');
-  //   String returnURL;
-  //   await storageReference.getDownloadURL().then((fileURL) {
-  //     returnURL =  fileURL;
-  //   });
-  //   return returnURL;
-  // }
 
 }
