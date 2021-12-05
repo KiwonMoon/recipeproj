@@ -80,7 +80,7 @@ class _IngredientState extends State<Ingredient> {
 
     if(googlelogin == true) {
       FirebaseFirestore.instance
-          .collection('selectedIngredients')
+          .collection('selectedIngredients')//nJUyGFy03UQtfVIAEnCcraydKA53
           .doc('${currentUserID!.uid}')
           .get()
           .then((DocumentSnapshot document) {
@@ -213,7 +213,8 @@ class _IngredientState extends State<Ingredient> {
                                   icon: Icon(Icons.add),
                                   onPressed: () {
                                     // if (userID != 'user1')
-                                    if(googlelogin == false && nameList.isEmpty)
+                                    // if(googlelogin == false && nameList.isEmpty)
+                                    if(nameList.isEmpty)
                                       addIngredients(currentUserID!.uid);
                                     Navigator.push(
                                         context,
