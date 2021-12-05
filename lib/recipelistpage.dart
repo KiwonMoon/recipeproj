@@ -3,6 +3,7 @@ import 'recipeaddpage.dart';
 import 'recipedetailpage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'model/recipe_model.dart';
+import 'bookmark.dart';
 
 class RecipeListPage extends StatelessWidget {
   const RecipeListPage({Key? key}) : super(key: key);
@@ -31,7 +32,7 @@ class RecipeListPage extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.bookmark_border_outlined, color: Colors.black, size: 33.0,),
             onPressed: (){
-
+              Navigator.push(context, MaterialPageRoute(builder: (context) => BookmarkPage()),);
             },
           ),
         ],

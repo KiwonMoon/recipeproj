@@ -68,57 +68,70 @@ class _LoginState extends State<Login> {
     return Scaffold(
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(height: 70.0),
-            Column(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 100),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Image.asset('images/recipe.png'),
-                const SizedBox(height: 16.0),
-                Text('MY RECIPE', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.redAccent),),
-                SizedBox(height: 60,),
+                SizedBox(height: 80.0),
+                Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 18),
+                      child: Image.asset('images/recipe.png',
+                      scale: 2.5,),
+                    ),
+                    const SizedBox(height: 40.0),
+                    Text('MY RECIPE', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.redAccent),),
+                    SizedBox(height: 60,),
+                  ],
+                ),
+                FlatButton(
+                  color: Colors.red.withOpacity(0.3),
+                  onPressed: () async {
+                    await signInWithGoogle();
+                    if (currentUserID != null) {
+                      print('GOOGLE LOGIN');
+                      print('<USER ID>:: ${currentUserID!.uid}');
+                      saveUser();
+                      // Navigator.push(context,
+                      //     MaterialPageRoute(builder: (context) => Ingredient()));
+                    }
+                  },
+                  child: Text("Google Login",style: TextStyle(fontSize: 18),),
+                  minWidth: 140,
+                  height: 40,
+                ),
+                FlatButton(
+                  color: Colors.grey.withOpacity(0.3),
+                  child: const Text('Guest',style: TextStyle(fontSize: 18),),
+                  onPressed: () async {
+                    // dynamic result = await _auth.signInAnon();
+                    googlelogin = false;
+                    await _auth.signInAnonymously();
+                    if (currentUserID != null) {
+                      print('GUEST LOGIN');
+                      print('<USER ID>:: ${currentUserID!.uid}');
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Ingredient()));
+                    }
+                  },
+                  minWidth: 140,
+                  height: 40,
+                ),
+                // FlatButton(
+                //   color: Colors.grey.withOpacity(0.3),
+                //   child: const Text('NEXT'),
+                //   onPressed: () {
+                //     Navigator.push(context,
+                //         MaterialPageRoute(builder: (context) => Ingredient()));
+                //   },
+                // ),
               ],
             ),
-            FlatButton(
-              color: Colors.red.withOpacity(0.3),
-              onPressed: () async {
-                await signInWithGoogle();
-                if (currentUserID != null) {
-                  print('GOOGLE LOGIN');
-                  print('<USER ID>:: ${currentUserID!.uid}');
-                  saveUser();
-                  // Navigator.push(context,
-                  //     MaterialPageRoute(builder: (context) => Ingredient()));
-                }
-              },
-              child: Text("Google Login"),
-            ),
-            FlatButton(
-              color: Colors.grey.withOpacity(0.3),
-              child: const Text('Guest'),
-              onPressed: () async {
-                // dynamic result = await _auth.signInAnon();
-                googlelogin = false;
-                await _auth.signInAnonymously();
-                if (currentUserID != null) {
-                  print('GUEST LOGIN');
-                  print('<USER ID>:: ${currentUserID!.uid}');
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Ingredient()));
-                }
-              },
-            ),
-            // FlatButton(
-            //   color: Colors.grey.withOpacity(0.3),
-            //   child: const Text('NEXT'),
-            //   onPressed: () {
-            //     Navigator.push(context,
-            //         MaterialPageRoute(builder: (context) => Ingredient()));
-            //   },
-            // ),
-          ],
+          ),
         ),
       ),
     );

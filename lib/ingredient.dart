@@ -114,6 +114,7 @@ class _IngredientState extends State<Ingredient> {
             icon: Icon(
               Icons.search,
               semanticLabel: 'search',
+              size: 33.0,
             ),
             onPressed: () {
               getData();
@@ -125,6 +126,7 @@ class _IngredientState extends State<Ingredient> {
               icon: Icon(
                 Icons.bookmark_border,
                 semanticLabel: 'bookmark',
+                size: 33.0,
               ),
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => BookmarkPage()),);
@@ -173,7 +175,7 @@ class _IngredientState extends State<Ingredient> {
                           style: TextStyle(
                               fontSize: 20, color: Colors.white),
                         ),
-                        color: Colors.deepOrange,
+                        color: Colors.redAccent,
                         padding: EdgeInsets.fromLTRB(55, 15, 55, 15),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(

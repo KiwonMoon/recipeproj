@@ -303,15 +303,15 @@ class _MapPageState extends State<MapPage> {
                               infoWindow: InfoWindow(title: "User Location"),
                               position: _userLocation)),
                       ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: ElevatedButton(
-                          onPressed: () {
-
-                          },
-                          child: Text("더 불러오기"),
-                        ),
-                      )
+                      // Align(
+                      //   alignment: Alignment.bottomCenter,
+                      //   child: ElevatedButton(
+                      //     onPressed: () {
+                      //
+                      //     },
+                      //     child: Text("더 불러오기"),
+                      //   ),
+                      // )
                     ],
                   );
                 } else {

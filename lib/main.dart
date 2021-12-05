@@ -15,7 +15,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'RECIPE',
       theme: ThemeData(
-        primarySwatch: Colors.deepOrange,
+        primarySwatch: Colors.red,
+        primaryColor: Colors.redAccent
       ),
       home: Login(),
       // Ingredient(),
