@@ -385,7 +385,7 @@ class _IngredientState extends State<Ingredient> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                RecipeListPage()));
+                                                RecipeListPage(nameList: nameList)));
                                   },
                                 ),
                                 SizedBox(height: 5,),
