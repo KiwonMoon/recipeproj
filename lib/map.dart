@@ -218,17 +218,20 @@ class _MapPageState extends State<MapPage> {
   }
 
   void findPlaces(LatLng userLocation, String token) async {
-
+    NearBySearchResponse result;
     print(userLocation.latitude);
     print(userLocation.longitude);
 
-    var result = await googlePlace.search.getNearBySearch(
+    result = (await googlePlace.search.getNearBySearch(
         Location(lat: userLocation.latitude, lng: userLocation.longitude), 3000,
-        type: "restaurant", rankby: RankBy.Distance);
+        type: "restaurant", rankby: RankBy.Distance))!;
 
     print(result.toString());
-
     if(result != null) {
+      print(result.nextPageToken);
+      if(result.nextPageToken != null) nextToken = result.nextPageToken!;
+      else nextToken = "";
+
       Set<Marker> _restaurantMarkers = result.results!
           .map((result) => Marker(
           markerId: MarkerId(result.name!),
@@ -248,7 +251,7 @@ class _MapPageState extends State<MapPage> {
                 );
               },
               snippet:
-              "Ratings: " + (result.rating?.toString() ?? "Not Rated")),
+              "평점: " + (result.rating?.toString() ?? "점수 없음")),
           position: LatLng(result.geometry!.location!.lat!,
               result.geometry!.location!.lng!)))
           .toSet();
@@ -300,6 +303,15 @@ class _MapPageState extends State<MapPage> {
                               infoWindow: InfoWindow(title: "User Location"),
                               position: _userLocation)),
                       ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: ElevatedButton(
+                          onPressed: () {
+
+                          },
+                          child: Text("더 불러오기"),
+                        ),
+                      )
                     ],
                   );
                 } else {

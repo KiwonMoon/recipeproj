@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:recipe_project/model/recipe_model.dart';
+import 'package:recipe_project/recipedetailpage.dart';
 import 'Recipe.dart';
 import 'fav_recipe.dart';
-import 'ingredient.dart';
 import 'model/login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class BookmarkPage extends StatefulWidget {
@@ -15,7 +17,50 @@ class BookmarkPage extends StatefulWidget {
 List marked = [];
 
 class _BookmarkPageState extends State<BookmarkPage> {
-  List<Recipe> favList = FavoriteRepository.loadFavList();
+  //List<Recipe> favList = FavoriteRepository.loadFavList();
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  CollectionReference bookmarks =
+  FirebaseFirestore.instance.collection('bookmark');
+  List<dynamic> imgs = [];
+  List<dynamic> recipeTitles = [];
+
+  Future<dynamic> fetchBookmarks() async {
+    var currentUser = _auth.currentUser!;
+    var result = await FirebaseFirestore.instance
+        .collection("bookmark")
+        .doc(currentUser.uid)
+        .get();
+
+
+    result.data()!.forEach((key, value) {
+      if (key == "img") {
+        imgs = value as List;
+      }
+      else if (key == "recipeTitle") {
+        recipeTitles = value as List;
+      }
+    });
+
+    setState(() {});
+  }
+
+  Future<dynamic> findRecipe(String recipeTitle) async {
+    var result = await FirebaseFirestore.instance
+        .collection("recipe")
+        .doc(recipeTitle)
+        .get();
+
+    RecipeModel recipeModel = RecipeModel.fromJson(result.data()!);
+
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => RecipeDetailPage(recipemodel: recipeModel)));
+  }
+
+  @override
+  void initState() {
+    fetchBookmarks();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,64 +97,66 @@ class _BookmarkPageState extends State<BookmarkPage> {
         title: Text("북마크 리스트"),
       ),
       body: ListView.separated(
-      itemCount: bookmarkTitle.length,
-      separatorBuilder: (BuildContext context, int index) =>
-          Divider(),
-      padding: EdgeInsets.zero,
-      itemBuilder: (BuildContext context, int index) {
-        final item = bookmarkTitle[index];
-        return Dismissible(
-          key: Key(item),
-          onDismissed: (direction) {
-            setState(() {
-              bookmarkTitle.removeAt(index);
-              bookmarkImg.removeAt(index);
-            });
-            ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('$item deleted')));
-            deleteBookmark(currentUserID!.uid, bookmarkTitle, bookmarkImg);
-          },
-          background: Container(
-            color: Colors.red,
-          ),
-          child: ListTile(
-            contentPadding: EdgeInsets.only(left: 10),
-            visualDensity: VisualDensity(vertical: 4,horizontal: -3),
-            leading: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(4.0)),
-              child: Image.asset(
-                bookmarkImg[index],
-                fit: BoxFit.cover,
-                width: 140,
+        itemCount: recipeTitles.length,
+        separatorBuilder: (BuildContext context, int index) =>
+            Divider(),
+        padding: EdgeInsets.zero,
+        itemBuilder: (BuildContext context, int index) {
+          final item = recipeTitles[index];
+          return Dismissible(
+            key: Key(item),
+            onDismissed: (direction) {
+              setState(() {
+                recipeTitles.removeAt(index);
+                imgs.removeAt(index);
+              });
+              updateBookmark(currentUserID!.uid);
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('$item deleted')));
+
+            },
+            background: Container(
+              color: Colors.red,
+            ),
+            child: ListTile(
+              onTap: () {
+                findRecipe(recipeTitles[index]);
+                print("press");
+              },
+              contentPadding: EdgeInsets.only(left: 10),
+              visualDensity: VisualDensity(vertical: 4,horizontal: -3),
+              leading: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                child: Image.asset(
+                  imgs[index],
+                  fit: BoxFit.cover,
+                  width: 140,
+                ),
               ),
+              title: Text(
+                item,
+                style: TextStyle(color: Colors.black),
+              ),
+              // subtitle: Text(
+              //   item.description,
+              //   style: TextStyle(color: Colors.grey),
+              // ),
             ),
-            title: Text(
-              item,
-              style: TextStyle(color: Colors.black),
-            ),
-            // subtitle: Text(
-            //   item.description,
-            //   style: TextStyle(color: Colors.grey),
-            // ),
-          ),
-        );
-      },
-    ),
+          );
+        },
+      ),
     );
   }
-  Future<void> deleteBookmark(String userID, List title, List img) async {
-    FirebaseFirestore.instance
-        .collection('bookmark')
-        .doc(userID)
-        .delete();
-    FirebaseFirestore.instance
-        .collection('bookmark')
-        .doc(userID)
-        .set({
-      'recipeTitle': FieldValue.arrayUnion(title),
-      'img': FieldValue.arrayUnion(img),
+  Future<void> updateBookmark(String userID) async {
+    var currentUser = _auth.currentUser!;
+
+    bookmarks.doc(currentUser.uid).update({
+      'img': imgs,
+      'recipeTitle': recipeTitles
+      // 42
     }).then((value) {
       print('DELETE BOOKMARK SUCCESS');
-    }).catchError((error) => print("Failed to delete product: $error"));
+    }).catchError((error) => print("Failed to add bookmark: $error"));
+
   }
 }

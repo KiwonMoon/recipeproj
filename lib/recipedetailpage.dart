@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'model/recipe_model.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RecipeDetailPage extends StatefulWidget {
   final RecipeModel recipemodel;
@@ -13,6 +14,87 @@ class RecipeDetailPage extends StatefulWidget {
 }
 
 class _RecipeDetailPageState extends State<RecipeDetailPage> {
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  CollectionReference bookmarks =
+  FirebaseFirestore.instance.collection('bookmark');
+  List<dynamic> imgs = [];
+  List<dynamic> recipeTitles = [];
+  IconData bookmarkIcon = Icons.bookmark_border_outlined;
+
+  Future<dynamic> fetchBookmarks() async {
+    var currentUser = _auth.currentUser!;
+    var result = await FirebaseFirestore.instance
+        .collection("bookmark")
+        .doc(currentUser.uid)
+        .get();
+
+
+    result.data()!.forEach((key, value) {
+      if (key == "img") {
+        imgs = value as List;
+      }
+      else if (key == "recipeTitle") {
+        recipeTitles = value as List;
+      }
+    });
+
+    if(recipeTitles.contains(widget.recipemodel.recipetitle)) {
+      setState(() {
+        bookmarkIcon = Icons.bookmark_outlined;
+      });
+    }
+
+  }
+
+  Future<void> addOrDeleteBookmark() async {
+
+    if(!recipeTitles.contains(widget.recipemodel.recipetitle)) {
+      imgs.add(widget.recipemodel.imagepath);
+      recipeTitles.add(widget.recipemodel.recipetitle);
+
+      var currentUser = _auth.currentUser!;
+
+      bookmarks.doc(currentUser.uid).update({
+        'img': imgs,
+        'recipeTitle': recipeTitles
+        // 42
+      }).catchError((error) => print("Failed to add bookmark: $error"));
+
+      setState(() {
+        bookmarkIcon = Icons.bookmark_outlined;
+      });
+
+      const snackBar = SnackBar(
+          behavior: SnackBarBehavior.floating, content: Text('BOOKMARKED!'));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else {
+
+      imgs.remove(widget.recipemodel.imagepath);
+      recipeTitles.remove(widget.recipemodel.recipetitle);
+
+      var currentUser = _auth.currentUser!;
+
+      bookmarks.doc(currentUser.uid).update({
+        'img': imgs,
+        'recipeTitle': recipeTitles
+        // 42
+      }).catchError((error) => print("Failed to add bookmark: $error"));
+
+      setState(() {
+        bookmarkIcon = Icons.bookmark_border_outlined;
+      });
+
+      const snackBar = SnackBar(
+          behavior: SnackBarBehavior.floating, content: Text('BOOKMARKED DELETED!'));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+  }
+
+  @override
+  void initState() {
+    fetchBookmarks();
+    super.initState();
+  }
 
 
   @override
@@ -37,9 +119,10 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
               Image.network(widget.recipemodel.imagepath, width: 600, height: 240, fit: BoxFit.cover,),
               ListTile(
                 trailing: IconButton(
-                  icon: Icon(Icons.bookmark_border_outlined, color: Colors.black, size: 30.0,),
+                  icon: Icon(bookmarkIcon, color: Colors.black, size: 30.0,),
                   onPressed: (){
-                    print(widget.recipemodel.recipetitle);
+                    addOrDeleteBookmark();
+
                   },
                 ),
               ),

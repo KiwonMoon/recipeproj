@@ -24,7 +24,7 @@ class _DetailsPageState extends State<DetailsPage> {
 
   @override
   void initState() {
-    getDetils(widget.placeId);
+    getDetails(widget.placeId);
     super.initState();
   }
 
@@ -106,8 +106,8 @@ class _DetailsPageState extends State<DetailsPage> {
                           title: Text(
                             detailsResult != null &&
                                 detailsResult.formattedAddress != null
-                                ? 'Address: ${detailsResult.formattedAddress}'
-                                : "Address: null",
+                                ? '주소: ${detailsResult.formattedAddress}'
+                                : "주소: null",
                           ),
                         ),
                       ),
@@ -122,8 +122,8 @@ class _DetailsPageState extends State<DetailsPage> {
                             detailsResult != null &&
                                 detailsResult.geometry != null &&
                                 detailsResult.geometry!.location != null
-                                ? 'Geometry: ${detailsResult.geometry!.location!.lat.toString()},${detailsResult.geometry!.location!.lng.toString()}'
-                                : "Geometry: null",
+                                ? '위치: ${detailsResult.geometry!.location!.lat.toString()},${detailsResult.geometry!.location!.lng.toString()}'
+                                : "위치: null",
                           ),
                         ),
                       ),
@@ -137,8 +137,8 @@ class _DetailsPageState extends State<DetailsPage> {
                           title: Text(
                             detailsResult != null &&
                                 detailsResult.rating != null
-                                ? 'Rating: ${detailsResult.rating.toString()}'
-                                : "Rating: null",
+                                ? '평점: ${detailsResult.rating.toString()}'
+                                : "평점: null",
                           ),
                         ),
                       ),
@@ -146,14 +146,14 @@ class _DetailsPageState extends State<DetailsPage> {
                         margin: EdgeInsets.only(left: 15, top: 10),
                         child: ListTile(
                           leading: CircleAvatar(
-                            child: Icon(Icons.attach_money),
+                            child: Icon(Icons.phone),
                             backgroundColor: Colors.deepOrangeAccent,
                           ),
                           title: Text(
                             detailsResult != null &&
-                                detailsResult.priceLevel != null
-                                ? 'Price level: ${detailsResult.priceLevel.toString()}'
-                                : "Price level: null",
+                                detailsResult.formattedPhoneNumber != null
+                                ? '전화번호: ${detailsResult.formattedPhoneNumber.toString()}'
+                                : "전화번호: null",
                           ),
                         ),
                       ),
@@ -168,7 +168,7 @@ class _DetailsPageState extends State<DetailsPage> {
     );
   }
 
-  void getDetils(String placeId) async {
+  void getDetails(String placeId) async {
     var result = await widget.googlePlace.details.get(placeId);
     if (result != null && result.result != null && mounted) {
       setState(() {
