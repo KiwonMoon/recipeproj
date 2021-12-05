@@ -6,27 +6,33 @@ import 'package:firebase_core/firebase_core.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'model/recipe_model.dart';
 
 
 
-class RecipeAddPage extends StatefulWidget {
-  const RecipeAddPage({Key? key}) : super(key: key);
+class RecipeEditPage extends StatefulWidget {
+  final RecipeModel recipemodel;
+  const RecipeEditPage({required this.recipemodel});
 
   static const mainColor = Color(0x80E33B1E);
   static const backColor = Color(0xffdddddd);
   static const fontColor = Color(0xff969696);
 
   @override
-  State<RecipeAddPage> createState() => _RecipeAddPageState();
+  State<RecipeEditPage> createState() => _RecipeEditPageState();
 }
 
-class _RecipeAddPageState extends State<RecipeAddPage> {
+class _RecipeEditPageState extends State<RecipeEditPage> {
 
   FirebaseAuth auth = FirebaseAuth.instance;
 
   PickedFile? _image;
   PickedFile? _selectedimage;
   final ImagePicker _getPicker = ImagePicker();
+
+  String recipecategory = "";
+  String recipetitle = "";
+  String recipeinfo = "";
 
   List ingredientList = [];
   List quantityList = [];
@@ -75,7 +81,7 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
 
       print(downloadUrl);
       // 문서 작성
-      await FirebaseFirestore.instance.collection('recipe').doc(titleController.text).set({
+      await FirebaseFirestore.instance.collection('recipe').doc(titleController.text).update({
         'recipecategory': _categoryDefault,
         'recipetitle': titleController.text,
         'recipeinfo': introductionController.text,
@@ -126,26 +132,56 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
   var _timeDefault = '15분 이내';
   final _difficultyList = ['하','중','상'];
   var _difficultyDefault = '하';
-  final _categoryList = ['밥','분식','국/탕/찌개','일식','양식','중식','면','반찬','야식','간식'];
+  final _categoryList = ['밥','분식','찌개','일식','양식','중식','면','반찬','야식','간식'];
   var _categoryDefault = '밥';
+
+  String setrecipecategory = "";
+  String setrecipetitle = "";
+  String setrecipeinfo = "";
+  String setimagepath = "";
+  String setpeoplecount = "";
+  String setcookingtime = "";
+  String setdifficulty = "";
+  List setingredientlist = [];
+  List setquantitylist = [];
+  List setcookinfolist = [];
+  List setcookimglist = [];
+
 
   @override
   Widget build(BuildContext context) {
 
-    // FirebaseFirestore.instance
-    //     .collection('recipe')
-    //     .doc('${currentUserID!.uid}')
-    //     .get()
-    //     .then((DocumentSnapshot document) {
-    //   imgList.addAll(document['img']);
-    //   nameList.addAll(document['name']);
-    // });
+    // void updateDoc(String docID, String title, String info) {
+    //   FirebaseFirestore.instance.collection('recipe').doc(docID).update({
+    //     recipetitle: title,
+    //     recipeinfo: info,
+    //   });
+    // }
+    _categoryDefault = widget.recipemodel.recipecategory;
+
+    FirebaseFirestore.instance
+        .collection('recipe')
+        .doc(widget.recipemodel.recipetitle)
+        .get()
+        .then((DocumentSnapshot document) {
+      setrecipecategory = widget.recipemodel.recipecategory;
+      setrecipetitle = widget.recipemodel.recipetitle;
+      setrecipeinfo = widget.recipemodel.recipeinfo;
+      setimagepath = widget.recipemodel.imagepath;
+      setpeoplecount = widget.recipemodel.peoplecount;
+      setcookingtime = widget.recipemodel.cookingtime;
+      setdifficulty = widget.recipemodel.difficulty;
+      setingredientlist.addAll(document['ingredientlist']);
+      setquantitylist.addAll(document['quantitylist']);
+      setcookinfolist.addAll(document['cookinfolist']);
+      setcookimglist.addAll(document['cookimglist']);
+    });
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: RecipeAddPage.mainColor, size: 30.0,),
+          icon: Icon(Icons.arrow_back, color: RecipeEditPage.mainColor, size: 30.0,),
           onPressed: (){
             Navigator.pop(context);
           },
@@ -154,10 +190,20 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
         title: Text('모앱개 레시피', style: TextStyle(color: Colors.black,),),
         actions: [
           IconButton(
-            icon: Icon(Icons.add, color: RecipeAddPage.mainColor,),
+            icon: Icon(Icons.edit, color: RecipeEditPage.mainColor,),
             onPressed: (){
-              _uploadFile(_image!.path);
-              Navigator.pop(context);
+              print(setrecipetitle);
+              print(setrecipeinfo);
+              print(setimagepath);
+              print(setpeoplecount);
+              print(setcookingtime);
+              print(setdifficulty);
+              print(setingredientlist);
+              print(setquantitylist);
+              print(setcookinfolist);
+              print(setcookimglist);
+              // _uploadFile(_image!.path);
+              // Navigator.pop(context);
             },
           ),
         ],
@@ -170,21 +216,21 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
               margin: EdgeInsets.only(bottom: 20.0,),
               child: Column(
                 children: [
-                  Text('레시피 제목', style: TextStyle(color: RecipeAddPage.mainColor, fontWeight: FontWeight.bold),),
+                  Text('레시피 제목', style: TextStyle(color: RecipeEditPage.mainColor, fontWeight: FontWeight.bold),),
                   Container(
                     margin: EdgeInsets.only(top: 10.0,),
                     padding: EdgeInsets.only(left: 10.0, right: 10.0),
                     decoration: new BoxDecoration(
                       borderRadius: new BorderRadius.circular(16.0),
-                      color: RecipeAddPage.backColor,
+                      color: RecipeEditPage.backColor,
                     ),
                     width: MediaQuery.of(context).size.width,
                     child: ListTile(
                       title: TextField(
                         controller: titleController,
                         decoration: InputDecoration(
-                          hintText: '해물파전',
-                          hintStyle: TextStyle(color: RecipeAddPage.fontColor, fontSize: 10.0,),
+                          hintText: widget.recipemodel.recipetitle,
+                          hintStyle: TextStyle(color: RecipeEditPage.fontColor, fontSize: 10.0,),
                         ),
                       ),
                       trailing: DropdownButton(
@@ -207,20 +253,20 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
               margin: EdgeInsets.only(bottom: 20.0,),
               child: Column(
                 children: [
-                  Text('요리소개', style: TextStyle(color: RecipeAddPage.mainColor, fontWeight: FontWeight.bold),),
+                  Text('요리소개', style: TextStyle(color: RecipeEditPage.mainColor, fontWeight: FontWeight.bold),),
                   Container(
                     margin: EdgeInsets.only(top: 10.0,),
                     padding: EdgeInsets.only(left: 10.0, right: 10.0),
                     decoration: new BoxDecoration(
                       borderRadius: new BorderRadius.circular(16.0),
-                      color: RecipeAddPage.backColor,
+                      color: RecipeEditPage.backColor,
                     ),
                     width: MediaQuery.of(context).size.width,
                     child: TextField(
                       controller: introductionController,
                       decoration: InputDecoration(
-                          hintText: '파전의 재발견 - 달짝지근한 파와 고소한 불고기로 즐거운 식탁을 만들어 보세요',
-                          hintStyle: TextStyle(color: RecipeAddPage.fontColor, fontSize: 10.0,)
+                          hintText: widget.recipemodel.recipeinfo,
+                          hintStyle: TextStyle(color: RecipeEditPage.fontColor, fontSize: 10.0,)
                       ),
                     ),
                   ),
@@ -231,29 +277,29 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
               margin: EdgeInsets.only(bottom: 20.0,),
               child: Column(
                 children: [
-                  Text('대표 사진 등록', style: TextStyle(color: RecipeAddPage.mainColor, fontWeight: FontWeight.bold),),
+                  Text('대표 사진 등록', style: TextStyle(color: RecipeEditPage.mainColor, fontWeight: FontWeight.bold),),
                   Container(
                     margin: EdgeInsets.only(top: 10.0,),
                     padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 50.0, bottom: 50.0),
                     decoration: new BoxDecoration(
                       borderRadius: new BorderRadius.circular(16.0),
-                      color: RecipeAddPage.backColor,
+                      color: RecipeEditPage.backColor,
                     ),
                     width: MediaQuery.of(context).size.width,
                     child: Center(
                       child: Column(
                         children: [
-                          _image == null ? IconButton(
+                          widget.recipemodel.imagepath == "" ? IconButton(
                             onPressed: () async => await getImageFromGallery(),
                             icon: Icon(Icons.add_a_photo),
-                          ) : Image.file(File(_image!.path), fit: BoxFit.contain,),
-                          Text('요리 대표 사진을 등록해 주세요', style: TextStyle(color: RecipeAddPage.fontColor, fontSize: 10.0,),),
+                          ) : Image.network(widget.recipemodel.imagepath, fit: BoxFit.contain,),
+                          Text('요리 대표 사진을 등록해 주세요', style: TextStyle(color: RecipeEditPage.fontColor, fontSize: 10.0,),),
                           Center(
-                            child: _image == null
+                            child: widget.recipemodel.imagepath == ""
                                 ? Text('No image selected!')
                                 : IconButton(
-                                  onPressed: () async => await getImageFromGallery(),
-                                  icon: Icon(Icons.add_a_photo),
+                                    onPressed: () async => await getImageFromGallery(),
+                                    icon: Icon(Icons.add_a_photo),
                             ),
                           ),
                         ],
@@ -269,7 +315,7 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
                 children: [
                   Container(
                       margin: EdgeInsets.only(bottom: 10.0,),
-                      child: Text('요리 정보', style: TextStyle(color: RecipeAddPage.mainColor, fontWeight: FontWeight.bold),)
+                      child: Text('요리 정보', style: TextStyle(color: RecipeEditPage.mainColor, fontWeight: FontWeight.bold),)
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -278,9 +324,9 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
                         children: [
                           Text('인원', style: TextStyle(fontSize: 10.0,),),
                           DropdownButton(
-                            value: _peopleDefault,
+                            value: widget.recipemodel.peoplecount,
                             items: _peopleList.map<DropdownMenuItem<String>>(
-                                (String value){
+                                    (String value){
                                   return DropdownMenuItem<String>(
                                     value: value,
                                     child: Text(value, style: TextStyle(fontSize: 10.0,),),
@@ -294,7 +340,7 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
                         children: [
                           Text('시간', style: TextStyle(fontSize: 10.0,),),
                           DropdownButton(
-                            value: _timeDefault,
+                            value: widget.recipemodel.cookingtime,
                             items: _timeList.map<DropdownMenuItem<String>>(
                                     (String value){
                                   return DropdownMenuItem<String>(
@@ -310,7 +356,7 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
                         children: [
                           Text('난이도', style: TextStyle(fontSize: 10.0,),),
                           DropdownButton(
-                            value: _difficultyDefault,
+                            value: widget.recipemodel.difficulty,
                             items: _difficultyList.map<DropdownMenuItem<String>>(
                                     (String value){
                                   return DropdownMenuItem<String>(
@@ -331,20 +377,20 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
               margin: EdgeInsets.only(bottom: 20.0,),
               child: Column(
                 children: [
-                  Text('요리 소개', style: TextStyle(color: RecipeAddPage.mainColor, fontWeight: FontWeight.bold),),
+                  Text('요리 소개', style: TextStyle(color: RecipeEditPage.mainColor, fontWeight: FontWeight.bold),),
                   Container(
                     margin: EdgeInsets.only(top: 10.0,),
                     padding: EdgeInsets.only(left: 10.0, right: 10.0),
                     decoration: new BoxDecoration(
                       borderRadius: new BorderRadius.circular(16.0),
-                      color: RecipeAddPage.backColor,
+                      color: RecipeEditPage.backColor,
                     ),
                     width: MediaQuery.of(context).size.width,
                     child: Column(
                       children: [
                         ListView.builder(
                           shrinkWrap: true,
-                          itemCount: ingredientList.length,
+                          itemCount: widget.recipemodel.ingredientlist.length,
                           itemBuilder: (BuildContext context, int index){
                             return Column(
                               children: [
@@ -358,8 +404,8 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
                                         child: Container(
                                           width: MediaQuery.of(context).size.width,
                                           child: Text(
-                                            ingredientList[index],
-                                            style: TextStyle(color: RecipeAddPage.fontColor, fontSize: 10.0,),
+                                            widget.recipemodel.ingredientlist[index],
+                                            style: TextStyle(color: RecipeEditPage.fontColor, fontSize: 10.0,),
                                           ),
                                         ),
                                       ),
@@ -368,18 +414,16 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
                                         child: Container(
                                           width: MediaQuery.of(context).size.width,
                                           child: Text(
-                                            quantityList[index],
-                                            style: TextStyle(color: RecipeAddPage.fontColor, fontSize: 10.0,),
+                                            widget.recipemodel.quantitylist[index],
+                                            style: TextStyle(color: RecipeEditPage.fontColor, fontSize: 10.0,),
                                           ),
                                         ),
                                       ),
                                       IconButton(
                                         onPressed: (){
                                           setState(() {
-                                            ingredientList.removeAt(index);
-                                            quantityList.removeAt(index);
-                                            print(ingredientList);
-                                            print(quantityList);
+                                            widget.recipemodel.ingredientlist.removeAt(index);
+                                            widget.recipemodel.quantitylist.removeAt(index);
                                           });
                                         },
                                         icon: Icon(Icons.delete, size: 20.0, color: Colors.red,),
@@ -409,7 +453,7 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
                                                 child: TextField(
                                                   decoration: InputDecoration(
                                                       hintText: '간장',
-                                                      hintStyle: TextStyle(color: RecipeAddPage.fontColor, fontSize: 10.0,)
+                                                      hintStyle: TextStyle(color: RecipeEditPage.fontColor, fontSize: 10.0,)
                                                   ),
                                                   onChanged: (String value) {
                                                     ingredientinput = value;
@@ -424,7 +468,7 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
                                                 child: TextField(
                                                   decoration: InputDecoration(
                                                       hintText: '예) 1.5T',
-                                                      hintStyle: TextStyle(color: RecipeAddPage.fontColor, fontSize: 10.0,)
+                                                      hintStyle: TextStyle(color: RecipeEditPage.fontColor, fontSize: 10.0,)
                                                   ),
                                                   onChanged: (String value) {
                                                     quantityinput = value;
@@ -461,20 +505,20 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
               margin: EdgeInsets.only(bottom: 20.0,),
               child: Column(
                 children: [
-                  Text('요리 순서', style: TextStyle(color: RecipeAddPage.mainColor, fontWeight: FontWeight.bold),),
+                  Text('요리 순서', style: TextStyle(color: RecipeEditPage.mainColor, fontWeight: FontWeight.bold),),
                   Container(
                     margin: EdgeInsets.only(top: 10.0,),
                     padding: EdgeInsets.only(left: 10.0, right: 10.0),
                     decoration: new BoxDecoration(
                       borderRadius: new BorderRadius.circular(16.0),
-                      color: RecipeAddPage.backColor,
+                      color: RecipeEditPage.backColor,
                     ),
                     width: MediaQuery.of(context).size.width,
                     child: Column(
                       children: [
                         ListView.builder(
                           shrinkWrap: true,
-                          itemCount: cookinfoList.length,
+                          itemCount: widget.recipemodel.cookinfolist.length,
                           itemBuilder: (BuildContext context, int index){
                             return Column(
                               children: [
@@ -492,24 +536,22 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
                                       flex: 5,
                                       child: Container(
                                           width: MediaQuery.of(context).size.width,
-                                          child: Text(cookinfoList[index], style: TextStyle(fontSize: 12.0),)
+                                          child: Text(widget.recipemodel.cookinfolist[index], style: TextStyle(fontSize: 12.0),)
                                       ),
                                     ),
                                     Flexible(
                                       flex: 1,
-                                      child: cookimgList[index] == ""
+                                      child: widget.recipemodel.cookimglist[index] == ""
                                           ? Text('No image')
-                                          : Image.network(cookimgList[index], fit: BoxFit.cover,),
+                                          : Image.network(widget.recipemodel.cookimglist[index], fit: BoxFit.cover,),
                                     ),
                                     Flexible(
                                       flex: 1,
                                       child: IconButton(
                                         onPressed: (){
                                           setState(() {
-                                            cookinfoList.removeAt(index);
-                                            cookimgList.removeAt(index);
-                                            print(cookinfoList);
-                                            print(cookimgList);
+                                            widget.recipemodel.cookinfolist.removeAt(index);
+                                            widget.recipemodel.cookimglist.removeAt(index);
                                           });
                                         },
                                         icon: Icon(Icons.delete),
@@ -533,8 +575,8 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
                                         content: SingleChildScrollView(
                                           child: Column(
                                             children: [
-                                              _selectedimage == null ? Text('요리 대표 사진을 등록해 주세요', style: TextStyle(color: RecipeAddPage.fontColor, fontSize: 10.0,),)
-                                              : Image.file(File(_selectedimage!.path), fit: BoxFit.contain,),
+                                              _selectedimage == null ? Text('요리 대표 사진을 등록해 주세요', style: TextStyle(color: RecipeEditPage.fontColor, fontSize: 10.0,),)
+                                                  : Image.file(File(_selectedimage!.path), fit: BoxFit.contain,),
                                               Row(
                                                 children: [
                                                   Flexible(
@@ -547,16 +589,16 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
                                                   Flexible(
                                                     flex: 5,
                                                     child: Container(
-                                                        width: MediaQuery.of(context).size.width,
-                                                        child: TextField(
-                                                          decoration: InputDecoration(
-                                                              hintText: '예) 대파는 길게 4등분 한 후 프라이팬 지름에 맞춰 3~4등분하여 준비한다.',
-                                                              hintStyle: TextStyle(color: RecipeAddPage.fontColor, fontSize: 10.0,)
-                                                          ),
-                                                          onChanged: (String value) {
-                                                            cookinfoinput = value;
-                                                          },
+                                                      width: MediaQuery.of(context).size.width,
+                                                      child: TextField(
+                                                        decoration: InputDecoration(
+                                                            hintText: '예) 대파는 길게 4등분 한 후 프라이팬 지름에 맞춰 3~4등분하여 준비한다.',
+                                                            hintStyle: TextStyle(color: RecipeEditPage.fontColor, fontSize: 10.0,)
                                                         ),
+                                                        onChanged: (String value) {
+                                                          cookinfoinput = value;
+                                                        },
+                                                      ),
                                                     ),
                                                   ),
                                                   Flexible(
@@ -583,7 +625,7 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
                                             });
                                             Navigator.of(context).pop();
                                           },
-                                          child: Text("Add"))
+                                              child: Text("Add"))
                                         ]
                                     );
                                   });

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'model/recipe_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'recipeeditpage.dart';
 
 
 class RecipeDetailPage extends StatefulWidget {
@@ -14,6 +16,9 @@ class RecipeDetailPage extends StatefulWidget {
 
 class _RecipeDetailPageState extends State<RecipeDetailPage> {
 
+  void deleteDoc(String docID) {
+    FirebaseFirestore.instance.collection('recipe').doc(docID).delete();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +33,22 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
         ),
         centerTitle: true,
         title: Text('모앱개 레시피', style: TextStyle(color: Colors.black,),),
+        actions: [
+          IconButton(
+            onPressed: (){
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => RecipeEditPage(recipemodel: widget.recipemodel)));
+            },
+            icon: Icon(Icons.edit, color: RecipeDetailPage.mainColor, size: 30.0,),
+          ),
+          IconButton(
+            onPressed: (){
+              deleteDoc(widget.recipemodel.recipetitle);
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.delete, color: RecipeDetailPage.mainColor, size: 30.0,),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,

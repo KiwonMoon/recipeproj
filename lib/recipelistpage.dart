@@ -48,7 +48,7 @@ class RecipeListPage extends StatelessWidget {
               itemCount: snapshot.data?.docs.length,
               itemBuilder: (ctx, index) => InkWell(
                 onTap: (){
-                  RecipeModel recipemodel = RecipeModel(recipetitle: snapshot.data?.docs[index]['recipetitle'],
+                  RecipeModel recipemodel = RecipeModel(recipecategory: snapshot.data?.docs[index]['recipecategory'], recipetitle: snapshot.data?.docs[index]['recipetitle'],
                   recipeinfo: snapshot.data?.docs[index]['recipetitle'], imagepath: snapshot.data?.docs[index]['imagepath'],
                   peoplecount: snapshot.data?.docs[index]['peoplecount'], cookingtime: snapshot.data?.docs[index]['cookingtime'],
                   difficulty: snapshot.data?.docs[index]['difficulty'], ingredientlist: snapshot.data?.docs[index]['ingredientlist'],
