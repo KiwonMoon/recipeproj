@@ -157,25 +157,26 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
     //     recipeinfo: info,
     //   });
     // }
-    _categoryDefault = widget.recipemodel.recipecategory;
 
     FirebaseFirestore.instance
         .collection('recipe')
         .doc(widget.recipemodel.recipetitle)
         .get()
         .then((DocumentSnapshot document) {
-      setrecipecategory = widget.recipemodel.recipecategory;
-      setrecipetitle = widget.recipemodel.recipetitle;
-      setrecipeinfo = widget.recipemodel.recipeinfo;
-      setimagepath = widget.recipemodel.imagepath;
-      setpeoplecount = widget.recipemodel.peoplecount;
-      setcookingtime = widget.recipemodel.cookingtime;
-      setdifficulty = widget.recipemodel.difficulty;
+      setrecipecategory = document['recipecategory'];
+      setrecipetitle = document['recipetitle'];
+      setrecipeinfo = document['recipeinfo'];
+      setimagepath = document['imagepath'];
+      setpeoplecount = document['peoplecount'];
+      setcookingtime = document['cookingtime'];
+      setdifficulty = document['difficulty'];
       setingredientlist.addAll(document['ingredientlist']);
       setquantitylist.addAll(document['quantitylist']);
       setcookinfolist.addAll(document['cookinfolist']);
       setcookimglist.addAll(document['cookimglist']);
     });
+
+    titleController.text = setrecipetitle;
 
     return Scaffold(
       appBar: AppBar(
@@ -324,7 +325,7 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
                         children: [
                           Text('인원', style: TextStyle(fontSize: 10.0,),),
                           DropdownButton(
-                            value: widget.recipemodel.peoplecount,
+                            value: _peopleDefault,
                             items: _peopleList.map<DropdownMenuItem<String>>(
                                     (String value){
                                   return DropdownMenuItem<String>(
@@ -340,7 +341,7 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
                         children: [
                           Text('시간', style: TextStyle(fontSize: 10.0,),),
                           DropdownButton(
-                            value: widget.recipemodel.cookingtime,
+                            value: _timeDefault,
                             items: _timeList.map<DropdownMenuItem<String>>(
                                     (String value){
                                   return DropdownMenuItem<String>(
@@ -356,7 +357,7 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
                         children: [
                           Text('난이도', style: TextStyle(fontSize: 10.0,),),
                           DropdownButton(
-                            value: widget.recipemodel.difficulty,
+                            value: _difficultyDefault,
                             items: _difficultyList.map<DropdownMenuItem<String>>(
                                     (String value){
                                   return DropdownMenuItem<String>(
@@ -400,7 +401,7 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
                                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: [
                                       Flexible(
-                                        flex: 1,
+                                        flex: 4,
                                         child: Container(
                                           width: MediaQuery.of(context).size.width,
                                           child: Text(
@@ -410,7 +411,7 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
                                         ),
                                       ),
                                       Flexible(
-                                        flex: 1,
+                                        flex: 4,
                                         child: Container(
                                           width: MediaQuery.of(context).size.width,
                                           child: Text(
@@ -419,14 +420,78 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
                                           ),
                                         ),
                                       ),
-                                      IconButton(
-                                        onPressed: (){
-                                          setState(() {
-                                            widget.recipemodel.ingredientlist.removeAt(index);
-                                            widget.recipemodel.quantitylist.removeAt(index);
-                                          });
-                                        },
-                                        icon: Icon(Icons.delete, size: 20.0, color: Colors.red,),
+                                      Flexible(
+                                        flex: 1,
+                                        child: IconButton(
+                                          onPressed: (){
+                                            showDialog(
+                                                context: context,
+                                                builder: (BuildContext context) {
+                                                  return AlertDialog(
+                                                      title: Text("Add Todolist"),
+                                                      content: Row(
+                                                        children: [
+                                                          Flexible(
+                                                            flex: 1,
+                                                            child: Container(
+                                                              width: MediaQuery.of(context).size.width,
+                                                              child: TextField(
+                                                                decoration: InputDecoration(
+                                                                    hintText: widget.recipemodel.ingredientlist[index],
+                                                                    hintStyle: TextStyle(color: RecipeEditPage.fontColor, fontSize: 10.0,)
+                                                                ),
+                                                                onChanged: (String value) {
+                                                                  ingredientinput = value;
+                                                                },
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Flexible(
+                                                            flex: 1,
+                                                            child: Container(
+                                                              width: MediaQuery.of(context).size.width,
+                                                              child: TextField(
+                                                                decoration: InputDecoration(
+                                                                    hintText: widget.recipemodel.quantitylist[index],
+                                                                    hintStyle: TextStyle(color: RecipeEditPage.fontColor, fontSize: 10.0,)
+                                                                ),
+                                                                onChanged: (String value) {
+                                                                  quantityinput = value;
+                                                                },
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      actions: <Widget>[
+                                                        FlatButton(onPressed: (){
+                                                          setState(() {
+                                                            ingredientList.add(ingredientinput);
+                                                            quantityList.add(quantityinput);
+                                                            print(ingredientList);
+                                                            print(quantityList);
+                                                          });
+                                                          Navigator.of(context).pop();
+                                                        },
+                                                            child: Text("Add"))
+                                                      ]
+                                                  );
+                                                });
+                                          },
+                                          icon: Icon(Icons.edit, size: 20.0, color: Colors.red,),
+                                        ),
+                                      ),
+                                      Flexible(
+                                        flex: 1,
+                                        child: IconButton(
+                                          onPressed: (){
+                                            setState(() {
+                                              widget.recipemodel.ingredientlist.removeAt(index);
+                                              widget.recipemodel.quantitylist.removeAt(index);
+                                            });
+                                          },
+                                          icon: Icon(Icons.delete, size: 20.0, color: Colors.red,),
+                                        ),
                                       ),
                                     ],
                                   ),
