@@ -26,7 +26,8 @@ class RecipeModel {
   final List<dynamic> cookimglist;
 
   RecipeModel.fromJson(Map<String, dynamic> json)
-      : recipetitle = json['recipetitle'],
+      : recipecategory = json['recipecategory'],
+        recipetitle = json['recipetitle'],
         recipeinfo = json['recipeinfo'],
         imagepath = json['imagepath'],
         peoplecount = json["peoplecount"],

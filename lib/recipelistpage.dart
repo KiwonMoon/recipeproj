@@ -46,7 +46,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
       body: Center(
         child: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance.collection('recipe')
-              .where('ingredientlist', arrayContains: widget.nameList[0])
+              // .where('ingredientlist', arrayContains: widget.nameList[0])
               .snapshots(),
           builder: (context, snapshot){
             if(snapshot.connectionState == ConnectionState.waiting){
@@ -81,11 +81,11 @@ class _RecipeListPageState extends State<RecipeListPage> {
                           title: Container(
                             padding: EdgeInsets.fromLTRB(0, 0, 0, 20.0),
                             child: Center(
-                              child: Text(snapshot.data?.docs[index]['recipetitle'], style: TextStyle(fontSize: 20.0),),
+                              child: Text(snapshot.data?.docs[index]['recipetitle'], style: TextStyle(fontSize: 18.0),),
                             ),
                           ),
                           isThreeLine: true,
-                          subtitle: Text(snapshot.data?.docs[index]['recipeinfo'],),
+                          subtitle: Text(snapshot.data?.docs[index]['recipeinfo'], style: TextStyle(fontSize: 10.0),),
                           dense: true,
                         ),
                       ),

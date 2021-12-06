@@ -143,7 +143,6 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                   icon: Icon(bookmarkIcon, color: Colors.black, size: 30.0,),
                   onPressed: (){
                     addOrDeleteBookmark();
-
                   },
                 ),
               ),
