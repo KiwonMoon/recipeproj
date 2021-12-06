@@ -52,7 +52,6 @@ class _RecipeListPageState extends State<RecipeListPage> {
             if(snapshot.connectionState == ConnectionState.waiting){
               return CircularProgressIndicator();
             }
-
             return ListView.builder(
               itemCount: snapshot.data?.docs.length,
               itemBuilder: (ctx, index) => InkWell(

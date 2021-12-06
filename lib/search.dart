@@ -207,27 +207,27 @@ class RecipeTile extends StatelessWidget {
       title: Text(this.name),
       onTap: (){
         print('tap : ${this.name}');
-        // FirebaseFirestore.instance.collection('recipe').doc('${this.name}')
-        //     .get().then((DocumentSnapshot document) {
-        //       // a = document['recipetitle'];
-        //       // b = document['recipeinfo'];
-        //       // c = document['imagepath'];
-        //       // d = document['peoplecount'];
-        //       // e = document['cookingtime'];
-        //       // f = document['difficulty'];
-        //       // g = document['ingredientlist'];
-        //       // h = document['quantitylist'];
-        //       // i = document['cookinfolist'];
-        //       // j = document['cookimglist'];
-        //   RecipeModel model = RecipeModel(recipetitle: document['recipetitle'],
-        //       recipeinfo: document['recipeinfo'], imagepath: document['imagepath'],
-        //       peoplecount: document['peoplecount'], cookingtime: document['cookingtime'],
-        //       difficulty: document['difficulty'], ingredientlist: document['ingredientlist'],
-        //       quantitylist: document['quantitylist'], cookinfolist: document['cookinfolist'],
-        //       cookimglist: document['cookimglist']);
-        //   Navigator.push(context,
-        //       MaterialPageRoute(builder: (context) => RecipeDetailPage(recipemodel: model)));
-        // });
+        FirebaseFirestore.instance.collection('recipe').doc('${this.name}')
+            .get().then((DocumentSnapshot document) {
+              // a = document['recipetitle'];
+              // b = document['recipeinfo'];
+              // c = document['imagepath'];
+              // d = document['peoplecount'];
+              // e = document['cookingtime'];
+              // f = document['difficulty'];
+              // g = document['ingredientlist'];
+              // h = document['quantitylist'];
+              // i = document['cookinfolist'];
+              // j = document['cookimglist'];
+          RecipeModel model = RecipeModel(recipetitle: document['recipetitle'], recipecategory: document['recipecategory'],
+              recipeinfo: document['recipeinfo'], imagepath: document['imagepath'],
+              peoplecount: document['peoplecount'], cookingtime: document['cookingtime'],
+              difficulty: document['difficulty'], ingredientlist: document['ingredientlist'],
+              quantitylist: document['quantitylist'], cookinfolist: document['cookinfolist'],
+              cookimglist: document['cookimglist']);
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => RecipeDetailPage(recipemodel: model)));
+        });
         // RecipeModel model = RecipeModel(recipetitle: a,
         //     recipeinfo: b, imagepath: c,
         //     peoplecount: d, cookingtime: e,
