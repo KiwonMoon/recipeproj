@@ -1,5 +1,6 @@
 class RecipeModel {
   const RecipeModel({
+    required this.recipecategory,
     required this.recipetitle,
     required this.recipeinfo,
     required this.imagepath,
@@ -12,6 +13,7 @@ class RecipeModel {
     required this.cookimglist,
   });
 
+  final String recipecategory;
   final String recipetitle;
   final String recipeinfo;
   final String imagepath;
