@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChartPage extends StatefulWidget {
   @override
@@ -24,21 +25,40 @@ class _ChartPageState extends State<ChartPage> {
       appBar: AppBar(title: Text('Chart'),),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 30, left: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              ChartLine(title: labels[0], number: points[0], rate: points[0]*0.01),
-              ChartLine(title: labels[1], number: points[1], rate: points[1]*0.01),
-              ChartLine(title: labels[2], number: points[2], rate: points[2]*0.01),
-              ChartLine(title: labels[3], number: points[3], rate: points[3]*0.01),
-              ChartLine(title: labels[4], number: points[4], rate: points[4]*0.01),
-              ChartLine(title: labels[5], number: points[5], rate: points[5]*0.01),
-              ChartLine(title: labels[6], number: points[6], rate: points[6]*0.01),
-              ChartLine(title: labels[7], number: points[7], rate: points[7]*0.01),
-            ],
-          ),
+        child: StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance.collection('rank')
+              .orderBy('counter', descending: true).limit(10).snapshots(),
+          builder: (context, snapshot) {
+            if(snapshot.connectionState == ConnectionState.waiting){
+              return CircularProgressIndicator();
+            }
+            return Padding(
+              padding: const EdgeInsets.only(top: 30, left: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  ChartLine(rate: snapshot.data!.docs[0]['counter']*0.1, title: snapshot.data!.docs[0]['name'], number: snapshot.data!.docs[0]['counter']),
+                  ChartLine(rate: snapshot.data!.docs[1]['counter']*0.1, title: snapshot.data!.docs[1]['name'], number: snapshot.data!.docs[1]['counter']),
+                  ChartLine(rate: snapshot.data!.docs[2]['counter']*0.1, title: snapshot.data!.docs[2]['name'], number: snapshot.data!.docs[2]['counter']),
+                  ChartLine(rate: snapshot.data!.docs[3]['counter']*0.1, title: snapshot.data!.docs[3]['name'], number: snapshot.data!.docs[3]['counter']),
+                  ChartLine(rate: snapshot.data!.docs[4]['counter']*0.1, title: snapshot.data!.docs[4]['name'], number: snapshot.data!.docs[4]['counter']),
+                  ChartLine(rate: snapshot.data!.docs[5]['counter']*0.1, title: snapshot.data!.docs[5]['name'], number: snapshot.data!.docs[5]['counter']),
+                  ChartLine(rate: snapshot.data!.docs[6]['counter']*0.1, title: snapshot.data!.docs[6]['name'], number: snapshot.data!.docs[6]['counter']),
+                  ChartLine(rate: snapshot.data!.docs[7]['counter']*0.1, title: snapshot.data!.docs[7]['name'], number: snapshot.data!.docs[7]['counter']),
+                  ChartLine(rate: snapshot.data!.docs[8]['counter']*0.1, title: snapshot.data!.docs[8]['name'], number: snapshot.data!.docs[8]['counter']),
+                  ChartLine(rate: snapshot.data!.docs[9]['counter']*0.1, title: snapshot.data!.docs[9]['name'], number: snapshot.data!.docs[9]['counter']),
+                  // ChartLine(title: labels[0], number: points[0], rate: points[0]*0.01),
+                  // ChartLine(title: labels[1], number: points[1], rate: points[1]*0.01),
+                  // ChartLine(title: labels[2], number: points[2], rate: points[2]*0.01),
+                  // ChartLine(title: labels[3], number: points[3], rate: points[3]*0.01),
+                  // ChartLine(title: labels[4], number: points[4], rate: points[4]*0.01),
+                  // ChartLine(title: labels[5], number: points[5], rate: points[5]*0.01),
+                  // ChartLine(title: labels[6], number: points[6], rate: points[6]*0.01),
+                  // ChartLine(title: labels[7], number: points[7], rate: points[7]*0.01),
+                ],
+              ),
+            );
+          }
         ),
       ),
     );
@@ -59,7 +79,7 @@ class ChartLine extends StatelessWidget {
 
   final double rate;
   final String title;
-  final double number;
+  final int number;
 
   @override
   Widget build(BuildContext context) {
