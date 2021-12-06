@@ -3,24 +3,31 @@ import 'recipeaddpage.dart';
 import 'recipedetailpage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'model/recipe_model.dart';
+import 'bookmark.dart';
 
-class RecipeListPage extends StatelessWidget {
-  const RecipeListPage({Key? key}) : super(key: key);
+class RecipeListPage extends StatefulWidget {
+  List nameList = [];
+  RecipeListPage({required this.nameList, Key? key}): super(key: key);
+  // RecipeListPage({Key? key}) : super(key: key);
 
   static const mainColor = Color(0x80E33B1E);
   static const mainBackgroundColor = Color(0xffE598BB);
 
+  @override
+  _RecipeListPageState createState() => _RecipeListPageState();
+}
 
-
+class _RecipeListPageState extends State<RecipeListPage> {
   @override
   Widget build(BuildContext context) {
+    print('${widget.nameList}');
 
     return Scaffold(
-      backgroundColor: mainBackgroundColor,
+      backgroundColor: RecipeListPage.mainBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: mainColor, size: 30.0,),
+          icon: Icon(Icons.arrow_back, color: RecipeListPage.mainColor, size: 30.0,),
           onPressed: (){
             Navigator.pop(context);
           },
@@ -31,14 +38,16 @@ class RecipeListPage extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.bookmark_border_outlined, color: Colors.black, size: 33.0,),
             onPressed: (){
-
+              Navigator.push(context, MaterialPageRoute(builder: (context) => BookmarkPage()),);
             },
           ),
         ],
       ),
       body: Center(
         child: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance.collection('recipe').snapshots(),
+          stream: FirebaseFirestore.instance.collection('recipe')
+              .where('ingredientlist', arrayContains: widget.nameList[0])
+              .snapshots(),
           builder: (context, snapshot){
             if(snapshot.connectionState == ConnectionState.waiting){
               return CircularProgressIndicator();

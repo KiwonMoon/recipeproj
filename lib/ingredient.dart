@@ -87,14 +87,14 @@ class _IngredientState extends State<Ingredient> {
         imgList.addAll(document['img']);
         nameList.addAll(document['name']);
       });
-        FirebaseFirestore.instance
-            .collection('bookmark')
-            .doc('${currentUserID!.uid}')
-            .get()
-            .then((DocumentSnapshot document) {
-          bookmarkImg.addAll(document['img']);
-          bookmarkTitle.addAll(document['recipeTitle']);
-        });
+      FirebaseFirestore.instance
+          .collection('bookmark')
+          .doc('${currentUserID!.uid}')
+          .get()
+          .then((DocumentSnapshot document) {
+        bookmarkImg.addAll(document['img']);
+        bookmarkTitle.addAll(document['recipeTitle']);
+      });
     } else if(selected.length > 0) {
       FirebaseFirestore.instance
           .collection('selectedIngredients')
@@ -114,6 +114,7 @@ class _IngredientState extends State<Ingredient> {
             icon: Icon(
               Icons.search,
               semanticLabel: 'search',
+              size: 33.0,
             ),
             onPressed: () {
               getData();
@@ -125,6 +126,7 @@ class _IngredientState extends State<Ingredient> {
               icon: Icon(
                 Icons.bookmark_border,
                 semanticLabel: 'bookmark',
+                size: 33.0,
               ),
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => BookmarkPage()),);
@@ -173,7 +175,7 @@ class _IngredientState extends State<Ingredient> {
                           style: TextStyle(
                               fontSize: 20, color: Colors.white),
                         ),
-                        color: Colors.deepOrange,
+                        color: Colors.redAccent,
                         padding: EdgeInsets.fromLTRB(55, 15, 55, 15),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(
@@ -236,59 +238,59 @@ class _IngredientState extends State<Ingredient> {
                                       mainAxisSpacing: 10,
                                       crossAxisSpacing: 2,
                                       children: List.generate(nameList.length,
-                                          (index) {
-                                        return Card(
-                                            child: InkWell(
-                                          child: Column(
-                                            children: <Widget>[
-                                              AspectRatio(
-                                                aspectRatio: 1 / 1,
-                                                child:
-                                                    Image.asset(imgList[index]),
-                                              ),
-                                              SizedBox(
-                                                height: 5,
-                                              ),
-                                              Text(nameList[index]),
-                                            ],
-                                          ),
-                                          onTap: () {
-                                            showDialog(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return AlertDialog(
-                                                    title: new Text(
-                                                        "선택한 재료를 삭제하시겠습니까?"),
-                                                    actions: <Widget>[
-                                                      FlatButton(
-                                                        child: Text('예'),
-                                                        onPressed: () {
-                                                          nameList
-                                                              .removeAt(index);
-                                                          imgList
-                                                              .removeAt(index);
-                                                          deleteIngredients(
-                                                              currentUserID!.uid,
-                                                              nameList,
-                                                              imgList);
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
+                                              (index) {
+                                            return Card(
+                                                child: InkWell(
+                                                  child: Column(
+                                                    children: <Widget>[
+                                                      AspectRatio(
+                                                        aspectRatio: 1 / 1,
+                                                        child:
+                                                        Image.asset(imgList[index]),
                                                       ),
-                                                      FlatButton(
-                                                        child: Text('아니오'),
-                                                        onPressed: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                      )
+                                                      SizedBox(
+                                                        height: 5,
+                                                      ),
+                                                      Text(nameList[index]),
                                                     ],
-                                                  );
-                                                });
-                                          },
-                                        ));
-                                      })),
+                                                  ),
+                                                  onTap: () {
+                                                    showDialog(
+                                                        context: context,
+                                                        builder:
+                                                            (BuildContext context) {
+                                                          return AlertDialog(
+                                                            title: new Text(
+                                                                "선택한 재료를 삭제하시겠습니까?"),
+                                                            actions: <Widget>[
+                                                              FlatButton(
+                                                                child: Text('예'),
+                                                                onPressed: () {
+                                                                  nameList
+                                                                      .removeAt(index);
+                                                                  imgList
+                                                                      .removeAt(index);
+                                                                  deleteIngredients(
+                                                                      currentUserID!.uid,
+                                                                      nameList,
+                                                                      imgList);
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                              ),
+                                                              FlatButton(
+                                                                child: Text('아니오'),
+                                                                onPressed: () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                              )
+                                                            ],
+                                                          );
+                                                        });
+                                                  },
+                                                ));
+                                          })),
                                 // if(userID!='user1')
                                 if(nameList.isEmpty && selected.isEmpty)
                                   Container(
@@ -383,7 +385,7 @@ class _IngredientState extends State<Ingredient> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                RecipeListPage()));
+                                                RecipeListPage(nameList: nameList)));
                                   },
                                 ),
                                 SizedBox(height: 5,),
