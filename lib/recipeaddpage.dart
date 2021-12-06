@@ -35,6 +35,7 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
   String ingredientinput = "";
   String quantityinput = "";
   String cookinfoinput = "";
+  int counter = 0;
 
   final titleController = TextEditingController();
   final introductionController = TextEditingController();
@@ -90,6 +91,23 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
     } catch (e) {
       print(e);
     }
+  }
+
+  Future<void> rankUpload(String ingredient) async {
+    int like =0;
+    await FirebaseFirestore.instance.collection('rank').doc(ingredient).get()
+        .then((DocumentSnapshot document) {
+      // like = document['counter'];
+      counter = document['counter'];
+      print('기존 like: $counter');
+      setState(() {
+        counter++;
+        // like++;
+      });
+    });
+    await FirebaseFirestore.instance.collection('rank').doc(ingredient).update({
+      'counter': counter,
+    });
   }
 
   Future<String> _cookinfouploadFile(String fileName) async {
@@ -429,6 +447,7 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
                                               quantityList.add(quantityinput);
                                               print(ingredientList);
                                               print(quantityList);
+                                              rankUpload(ingredientinput);
                                             });
                                             Navigator.of(context).pop();
                                           },

@@ -45,7 +45,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
       body: Center(
         child: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance.collection('recipe')
-              .where('ingredientlist', arrayContains: widget.nameList[0])
+              // .where('ingredientlist', arrayContains: widget.nameList[0])
               .snapshots(),
           builder: (context, snapshot){
             if(snapshot.connectionState == ConnectionState.waiting){

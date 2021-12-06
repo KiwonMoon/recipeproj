@@ -29,7 +29,7 @@ class _IngredientState extends State<Ingredient> {
     var titleSearch;
     snap.docs.forEach((document) {
       titleSearch = document.data();
-      searchNameList.add(titleSearch['recipeTitle']);
+      searchNameList.add(titleSearch['recipetitle']);
     });
     print('searchNameList::: $searchNameList');
   }
