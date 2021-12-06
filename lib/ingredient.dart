@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recipe_project/categoryList.dart';
 import 'package:recipe_project/ingredient_add.dart';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,7 +12,7 @@ import 'model/category_repository.dart';
 import 'model/category_model.dart';
 import 'bookmark.dart';
 import 'package:recipe_project/search.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'model/login.dart';
 import 'map.dart';
 
@@ -66,6 +67,8 @@ class _IngredientState extends State<Ingredient> {
             ],
           ),
           onTap: (){
+            Navigator.push(context, MaterialPageRoute(
+                builder: (context) => CateList(categoryName: product.name)));
             //Navigator.push(context, MaterialPageRoute(builder: (context) => RecipePage()),);
           },
         ),
@@ -130,6 +133,25 @@ class _IngredientState extends State<Ingredient> {
               ),
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => BookmarkPage()),);
+              },
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.exit_to_app,
+                semanticLabel: 'bookmark',
+                size: 33.0,
+              ),
+              onPressed: () {
+                if(googlelogin == true) {
+                  googleSignIn.signOut();
+                  print('GOOGLE LOGOUT');
+                }else {
+                  FirebaseAuth.instance.signOut();
+                  print('GUEST LOGOUT');
+                }
+                Navigator.pop(context);
+                // Navigator.push(context,
+                //     MaterialPageRoute(builder: (context) => Login()));
               },
             ),
           ],
