@@ -201,7 +201,6 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
 
               editPhoto == false ? _uploadFile(widget.recipemodel.imagepath, editPhoto) : _uploadFile(_image!.path, editPhoto);
               print('edit finish');
-              Navigator.pop(context);
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => RecipeListPage(nameList: nameList)));
             },
