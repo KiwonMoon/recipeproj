@@ -6,7 +6,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'model/login.dart';
 import 'model/recipe_model.dart';
+import 'recipelistpage.dart';
 
 
 
@@ -163,6 +165,8 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
   List newcookinfolist = [];
   List newcookimglist = [];
 
+  List nameList = [];
+
   @override
   Widget build(BuildContext context) {
 
@@ -182,6 +186,14 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
             icon: Icon(Icons.edit, color: RecipeEditPage.mainColor,),
             onPressed: (){
 
+              FirebaseFirestore.instance
+                  .collection('selectedIngredients')
+                  .doc('${currentUserID!.uid}')
+                  .get()
+                  .then((DocumentSnapshot document) {
+                nameList.addAll(document['name']);
+              });
+
               newingredientlist = widget.recipemodel.ingredientlist;
               newquantitylist = widget.recipemodel.quantitylist;
               newcookinfolist = widget.recipemodel.cookinfolist;
@@ -190,6 +202,8 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
               editPhoto == false ? _uploadFile(widget.recipemodel.imagepath, editPhoto) : _uploadFile(_image!.path, editPhoto);
               print('edit finish');
               Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => RecipeListPage(nameList: nameList)));
             },
           ),
         ],
