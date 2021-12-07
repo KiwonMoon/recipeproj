@@ -15,6 +15,7 @@ import 'package:recipe_project/search.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'model/login.dart';
 import 'map.dart';
+import 'calendar.dart';
 
 class Ingredient extends StatefulWidget {
   @override
@@ -428,6 +429,26 @@ class _IngredientState extends State<Ingredient> {
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 ChartPage()));
+                                  },
+                                ),
+                                SizedBox(height: 5,),
+                                RaisedButton(
+                                  child: Text(
+                                    '일정 보기',
+                                    style: TextStyle(
+                                        fontSize: 20, color: Colors.white),
+                                  ),
+                                  color: Colors.deepOrange,
+                                  padding: EdgeInsets.fromLTRB(55, 15, 55, 15),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20.0))),
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                Calendar()));
                                   },
                                 ),
                               ],
