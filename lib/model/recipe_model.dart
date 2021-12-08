@@ -1,5 +1,5 @@
 class RecipeModel {
-  const RecipeModel({
+  RecipeModel({
     required this.recipecategory,
     required this.recipetitle,
     required this.recipeinfo,
@@ -13,17 +13,17 @@ class RecipeModel {
     required this.cookimglist,
   });
 
-  final String recipecategory;
-  final String recipetitle;
-  final String recipeinfo;
-  final String imagepath;
-  final String peoplecount;
-  final String cookingtime;
-  final String difficulty;
-  final List<dynamic> ingredientlist;
-  final List<dynamic> quantitylist;
-  final List<dynamic> cookinfolist;
-  final List<dynamic> cookimglist;
+  String recipecategory;
+  String recipetitle;
+  String recipeinfo;
+  String imagepath;
+  String peoplecount;
+  String cookingtime;
+  String difficulty;
+  List<dynamic> ingredientlist;
+  List<dynamic> quantitylist;
+  List<dynamic> cookinfolist;
+  List<dynamic> cookimglist;
 
   RecipeModel.fromJson(Map<String, dynamic> json)
       : recipecategory = json['recipecategory'],

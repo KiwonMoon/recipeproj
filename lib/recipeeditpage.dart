@@ -34,20 +34,9 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
   bool selectededitPhoto = false;
   final ImagePicker _getPicker = ImagePicker();
 
-  String recipecategory = "";
-  String recipetitle = "";
-  String recipeinfo = "";
-  List ingredientList = [];
-  List quantityList = [];
-  List cookinfoList = [];
-  List cookimgList = [];
   String ingredientinput = "";
   String quantityinput = "";
   String cookinfoinput = "";
-
-  final titleController = TextEditingController();
-  final introductionController = TextEditingController();
-  final ingredientController = TextEditingController();
 
   Future getImageFromGallery() async {
     PickedFile? image = await _getPicker.getImage(source: ImageSource.gallery);
@@ -85,36 +74,46 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
         // 업로드 완료 후 url
         final downloadUrl = await firebaseStorageRef.getDownloadURL();
 
+        if(lastrecipetitle == ""){
+          lastrecipetitle = widget.recipemodel.recipetitle;
+        }
+
         // 문서 작성
-        await FirebaseFirestore.instance.collection('recipe').doc(widget.recipemodel.recipetitle).delete();
-        await FirebaseFirestore.instance.collection('recipe').doc(newrecipetitle).set({
-          'recipecategory': newrecipecategory,
-          "recipetitle": newrecipetitle,
-          "recipeinfo": newrecipeinfo,
+        await FirebaseFirestore.instance.collection('recipe').doc(lastrecipetitle).delete();
+        await FirebaseFirestore.instance.collection('recipe').doc(widget.recipemodel.recipetitle).set({
+          'recipecategory': widget.recipemodel.recipecategory,
+          "recipetitle": widget.recipemodel.recipetitle,
+          "recipeinfo": widget.recipemodel.recipeinfo,
           'imagepath': downloadUrl,
-          'peoplecount': newpeoplecount,
-          'cookingtime': newcookingtime,
-          'difficulty': newdifficulty,
-          'ingredientlist': FieldValue.arrayUnion(newingredientlist),
-          'quantitylist': FieldValue.arrayUnion(newquantitylist),
-          'cookinfolist': FieldValue.arrayUnion(newcookinfolist),
-          'cookimglist': FieldValue.arrayUnion(newcookimglist),
+          'peoplecount': widget.recipemodel.peoplecount,
+          'cookingtime': widget.recipemodel.cookingtime,
+          'difficulty': widget.recipemodel.difficulty,
+          'ingredientlist': FieldValue.arrayUnion(widget.recipemodel.ingredientlist),
+          'quantitylist': FieldValue.arrayUnion(widget.recipemodel.quantitylist),
+          'cookinfolist': FieldValue.arrayUnion(widget.recipemodel.cookinfolist),
+          'cookimglist': FieldValue.arrayUnion(widget.recipemodel.cookimglist),
         });
       }else{
+        print("Start!! filename");
+
+        if(lastrecipetitle == ""){
+          lastrecipetitle = widget.recipemodel.recipetitle;
+        }
+
         // 문서 작성
-        await FirebaseFirestore.instance.collection('recipe').doc(widget.recipemodel.recipetitle).delete();
-        await FirebaseFirestore.instance.collection('recipe').doc(newrecipetitle).set({
-          'recipecategory': newrecipecategory,
-          "recipetitle": newrecipetitle,
-          "recipeinfo": newrecipeinfo,
+        await FirebaseFirestore.instance.collection('recipe').doc(lastrecipetitle).delete();
+        await FirebaseFirestore.instance.collection('recipe').doc(widget.recipemodel.recipetitle).set({
+          'recipecategory': widget.recipemodel.recipecategory,
+          "recipetitle": widget.recipemodel.recipetitle,
+          "recipeinfo": widget.recipemodel.recipeinfo,
           'imagepath': fileName,
-          'peoplecount': newpeoplecount,
-          'cookingtime': newcookingtime,
-          'difficulty': newdifficulty,
-          'ingredientlist': FieldValue.arrayUnion(newingredientlist),
-          'quantitylist': FieldValue.arrayUnion(newquantitylist),
-          'cookinfolist': FieldValue.arrayUnion(newcookinfolist),
-          'cookimglist': FieldValue.arrayUnion(newcookimglist),
+          'peoplecount': widget.recipemodel.peoplecount,
+          'cookingtime': widget.recipemodel.cookingtime,
+          'difficulty': widget.recipemodel.difficulty,
+          'ingredientlist': FieldValue.arrayUnion(widget.recipemodel.ingredientlist),
+          'quantitylist': FieldValue.arrayUnion(widget.recipemodel.quantitylist),
+          'cookinfolist': FieldValue.arrayUnion(widget.recipemodel.cookinfolist),
+          'cookimglist': FieldValue.arrayUnion(widget.recipemodel.cookimglist),
         });
       }
     } catch (e) {
@@ -153,19 +152,10 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
   final _difficultyList = ['하','중','상'];
   final _categoryList = ['밥','분식','찌개','일식','양식','중식','면','반찬','야식','간식'];
 
-  String newrecipecategory = "밥";
-  String newrecipetitle = "";
-  String newrecipeinfo = "";
-  String newimagepath = "";
-  String newpeoplecount = "1인분";
-  String newcookingtime = "15분 이내";
-  String newdifficulty = "하";
-  List newingredientlist = [];
-  List newquantitylist = [];
-  List newcookinfolist = [];
-  List newcookimglist = [];
-
   List nameList = [];
+
+  bool onlyrecipetitle = true;
+  String lastrecipetitle = "";
 
   @override
   Widget build(BuildContext context) {
@@ -186,18 +176,13 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
             icon: Icon(Icons.edit, color: RecipeEditPage.mainColor,),
             onPressed: (){
 
-              FirebaseFirestore.instance
-                  .collection('selectedIngredients')
-                  .doc('${currentUserID!.uid}')
-                  .get()
-                  .then((DocumentSnapshot document) {
-                nameList.addAll(document['name']);
-              });
-
-              newingredientlist = widget.recipemodel.ingredientlist;
-              newquantitylist = widget.recipemodel.quantitylist;
-              newcookinfolist = widget.recipemodel.cookinfolist;
-              newcookimglist = widget.recipemodel.cookimglist;
+              // FirebaseFirestore.instance
+              //     .collection('selectedIngredients')
+              //     .doc('${currentUserID!.uid}')
+              //     .get()
+              //     .then((DocumentSnapshot document) {
+              //   nameList.addAll(document['name']);
+              // });
 
               editPhoto == false ? _uploadFile(widget.recipemodel.imagepath, editPhoto) : _uploadFile(_image!.path, editPhoto);
               print('edit finish');
@@ -229,12 +214,18 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
                         initialValue: widget.recipemodel.recipetitle,
                         onChanged: (String value){
                           setState(() {
-                            newrecipetitle = value;
+                            if(onlyrecipetitle){
+                              lastrecipetitle = widget.recipemodel.recipetitle;
+                              widget.recipemodel.recipetitle = value;
+                              onlyrecipetitle = false;
+                            }else{
+                              widget.recipemodel.recipetitle = value;
+                            }
                           });
                         },
                       ),
                       trailing: DropdownButton(
-                        value: newrecipecategory,
+                        value: widget.recipemodel.recipecategory,
                         items: _categoryList.map<DropdownMenuItem<String>>(
                                 (String value){
                               return DropdownMenuItem<String>(
@@ -242,7 +233,7 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
                                 child: Text(value, style: TextStyle(fontSize: 10.0,),),
                               );
                             }).toList(),
-                        onChanged: (value) => setState(() => newrecipecategory = value as String),
+                        onChanged: (value) => setState(() => widget.recipemodel.recipecategory = value as String),
                       ),
                     ),
                   ),
@@ -266,7 +257,8 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
                       initialValue: widget.recipemodel.recipeinfo,
                       onChanged: (String value){
                         setState(() {
-                          newrecipeinfo = value;
+                          widget.recipemodel.recipeinfo = value;
+                          print(widget.recipemodel.recipeinfo);
                         });
                       },
                     ),
@@ -322,7 +314,7 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
                         children: [
                           Text('인원', style: TextStyle(fontSize: 10.0,),),
                           DropdownButton(
-                            value: newpeoplecount,
+                            value: widget.recipemodel.peoplecount,
                             items: _peopleList.map<DropdownMenuItem<String>>(
                                     (String value){
                                   return DropdownMenuItem<String>(
@@ -330,7 +322,7 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
                                     child: Text(value, style: TextStyle(fontSize: 10.0,),),
                                   );
                                 }).toList(),
-                            onChanged: (value) => setState(() => newpeoplecount = value as String),
+                            onChanged: (value) => setState(() => widget.recipemodel.peoplecount = value as String),
                           ),
                         ],
                       ),
@@ -338,7 +330,7 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
                         children: [
                           Text('시간', style: TextStyle(fontSize: 10.0,),),
                           DropdownButton(
-                            value: newcookingtime,
+                            value: widget.recipemodel.cookingtime,
                             items: _timeList.map<DropdownMenuItem<String>>(
                                     (String value){
                                   return DropdownMenuItem<String>(
@@ -346,7 +338,7 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
                                     child: Text(value, style: TextStyle(fontSize: 10.0,),),
                                   );
                                 }).toList(),
-                            onChanged: (value) => setState(() => newcookingtime = value as String),
+                            onChanged: (value) => setState(() => widget.recipemodel.cookingtime = value as String),
                           ),
                         ],
                       ),
@@ -354,7 +346,7 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
                         children: [
                           Text('난이도', style: TextStyle(fontSize: 10.0,),),
                           DropdownButton(
-                            value: newdifficulty,
+                            value: widget.recipemodel.difficulty,
                             items: _difficultyList.map<DropdownMenuItem<String>>(
                                     (String value){
                                   return DropdownMenuItem<String>(
@@ -362,7 +354,7 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
                                     child: Text(value, style: TextStyle(fontSize: 10.0,),),
                                   );
                                 }).toList(),
-                            onChanged: (value) => setState(() => newdifficulty = value as String),
+                            onChanged: (value) => setState(() => widget.recipemodel.difficulty = value as String),
                           ),
                         ],
                       ),
@@ -537,8 +529,6 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
                                             setState(() {
                                               widget.recipemodel.ingredientlist.add(ingredientinput);
                                               widget.recipemodel.quantitylist.add(quantityinput);
-                                              print(widget.recipemodel.ingredientlist);
-                                              print(widget.recipemodel.quantitylist);
                                             });
                                             Navigator.of(context).pop();
                                           },
@@ -655,8 +645,6 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
                                                         setState((){
                                                           widget.recipemodel.cookinfolist[index] = cookinfoinput;
                                                           widget.recipemodel.cookimglist[index] = pathpath;
-                                                          print(cookinfoList);
-                                                          print(pathpath);
                                                         });
                                                         Navigator.of(context).pop();
                                                       },
@@ -743,8 +731,6 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
                                             setState((){
                                               widget.recipemodel.cookinfolist.add(cookinfoinput);
                                               widget.recipemodel.cookimglist.add(pathpath);
-                                              print(widget.recipemodel.cookinfolist);
-                                              print(widget.recipemodel.cookimglist);
                                             });
                                             Navigator.of(context).pop();
                                           },
