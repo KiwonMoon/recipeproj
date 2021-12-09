@@ -17,11 +17,37 @@ class RecipeListPage extends StatefulWidget {
   _RecipeListPageState createState() => _RecipeListPageState();
 }
 
+
 class _RecipeListPageState extends State<RecipeListPage> {
+
+  Future<List<RecipeModel>> fetchRecipe() async {
+    List<RecipeModel> recipes = [];
+
+    var result = await FirebaseFirestore.instance
+        .collection("recipe")
+        .get();
+
+    result.docs.forEach((element) {
+      var recipe = RecipeModel.fromJson(element.data());
+
+      var recipeAvailable = true;
+
+      for(int i = 0; i < recipe.ingredientlist.length; i++) {
+        if(!widget.nameList.contains(recipe.ingredientlist[i])) {
+          recipeAvailable = false;
+        }
+      }
+
+      if(recipeAvailable) recipes.add(recipe);
+    });
+
+    return recipes;
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
-    print('${widget.nameList}');
-
     return Scaffold(
       backgroundColor: RecipeListPage.mainBackgroundColor,
       appBar: AppBar(
@@ -44,57 +70,59 @@ class _RecipeListPageState extends State<RecipeListPage> {
         ],
       ),
       body: Center(
-        child: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance.collection('recipe')
-              .where('ingredientlist', arrayContains: widget.nameList[0])
-              .snapshots(),
-          builder: (context, snapshot){
-            if(snapshot.connectionState == ConnectionState.waiting){
-              return CircularProgressIndicator();
-            }
-
-            return ListView.builder(
-              itemCount: snapshot.data?.docs.length,
-              itemBuilder: (ctx, index) => InkWell(
-                onTap: (){
-                  RecipeModel recipemodel = RecipeModel(recipetitle: snapshot.data?.docs[index]['recipetitle'],
-                  recipeinfo: snapshot.data?.docs[index]['recipetitle'], imagepath: snapshot.data?.docs[index]['imagepath'],
-                  peoplecount: snapshot.data?.docs[index]['peoplecount'], cookingtime: snapshot.data?.docs[index]['cookingtime'],
-                  difficulty: snapshot.data?.docs[index]['difficulty'], ingredientlist: snapshot.data?.docs[index]['ingredientlist'],
-                  quantitylist: snapshot.data?.docs[index]['quantitylist'], cookinfolist: snapshot.data?.docs[index]['cookinfolist'],
-                  cookimglist: snapshot.data?.docs[index]['cookimglist']);
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => RecipeDetailPage(recipemodel: recipemodel)));
-                },
-                child: Card(
-                  child: Row(
-                    children: [
-                      Flexible(
-                        flex: 1,
-                        child: Card(
-                          child: Image.network(snapshot.data?.docs[index]['imagepath']),
-                        ),
-                      ),
-                      Flexible(
-                        flex: 1,
-                        child: ListTile(
-                          title: Container(
-                            padding: EdgeInsets.fromLTRB(0, 0, 0, 20.0),
-                            child: Center(
-                              child: Text(snapshot.data?.docs[index]['recipetitle'], style: TextStyle(fontSize: 20.0),),
+        child: FutureBuilder(
+            future: fetchRecipe(),
+            builder: (BuildContext context, AsyncSnapshot<List<RecipeModel>> snapshot) {
+              if(snapshot.hasData == false) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.hasError) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Error: ${snapshot.error}',
+                    style: const TextStyle(fontSize: 15),
+                  ),
+                );
+              } else {
+                return ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (ctx, index) => InkWell(
+                    onTap: (){
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => RecipeDetailPage(recipemodel: snapshot.data![index])));
+                    },
+                    child: Card(
+                      child: Row(
+                        children: [
+                          Flexible(
+                            flex: 1,
+                            child: Card(
+                              child: Image.network(snapshot.data?[index].imagepath ?? ""),
                             ),
                           ),
-                          isThreeLine: true,
-                          subtitle: Text(snapshot.data?.docs[index]['recipeinfo'],),
-                          dense: true,
-                        ),
+                          Flexible(
+                            flex: 1,
+                            child: ListTile(
+                              title: Container(
+                                padding: EdgeInsets.fromLTRB(0, 0, 0, 20.0),
+                                child: Center(
+                                  child: Text(snapshot.data?[index].recipetitle ?? "", style: TextStyle(fontSize: 20.0),),
+                                ),
+                              ),
+                              isThreeLine: true,
+                              subtitle: Text(snapshot.data?[index].recipeinfo ?? "",),
+                              dense: true,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            );
-          },
+                );
+              }
+            }
         ),
       ),
       floatingActionButton: FloatingActionButton(
