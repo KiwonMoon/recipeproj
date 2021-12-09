@@ -33,6 +33,7 @@ var rnd = Random().nextInt(7);
 //       Event('Today\'s Event 2'),
 //     ],
 //   });
+var eventlists = [DateTime(2021, 12, 1),DateTime(2021, 12, 2),];
 final _kEventSource = Map.fromIterable(List.generate(80, (index) => index),
     key: (item) => DateTime.utc(2021, 10, item * Random().nextInt(3)+1),
     value: (item) => List.generate(
