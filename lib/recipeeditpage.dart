@@ -162,18 +162,17 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: RecipeEditPage.mainColor, size: 30.0,),
+          icon: Icon(Icons.arrow_back, size: 30.0,),
           onPressed: (){
             Navigator.pop(context);
           },
         ),
         centerTitle: true,
-        title: Text('모앱개 레시피', style: TextStyle(color: Colors.black,),),
+        title: Text('모앱개 레시피',),
         actions: [
           IconButton(
-            icon: Icon(Icons.edit, color: RecipeEditPage.mainColor,),
+            icon: Icon(Icons.edit,),
             onPressed: (){
 
               // FirebaseFirestore.instance
@@ -566,109 +565,112 @@ class _RecipeEditPageState extends State<RecipeEditPage> {
                           itemBuilder: (BuildContext context, int index){
                             return Column(
                               children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Flexible(
-                                      flex: 1,
-                                      child: Container(
-                                          width: MediaQuery.of(context).size.width,
-                                          child: Center(child: Text((index + 1).toString(), style: TextStyle(fontSize: 12.0),))
+                                Container(
+                                  margin: EdgeInsets.all(10.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Flexible(
+                                        flex: 1,
+                                        child: Container(
+                                            width: MediaQuery.of(context).size.width,
+                                            child: Center(child: Text((index + 1).toString(), style: TextStyle(fontSize: 12.0),))
+                                        ),
                                       ),
-                                    ),
-                                    Flexible(
-                                      flex: 7,
-                                      child: Container(
-                                          width: MediaQuery.of(context).size.width,
-                                          child: Text(widget.recipemodel.cookinfolist[index], style: TextStyle(fontSize: 12.0),)
+                                      Flexible(
+                                        flex: 7,
+                                        child: Container(
+                                            width: MediaQuery.of(context).size.width,
+                                            child: Text(widget.recipemodel.cookinfolist[index], style: TextStyle(fontSize: 12.0),)
+                                        ),
                                       ),
-                                    ),
-                                    Flexible(
-                                      flex: 3,
-                                      child: widget.recipemodel.cookimglist[index] == ""
-                                          ? Text('No image')
-                                          : Image.network(widget.recipemodel.cookimglist[index], fit: BoxFit.cover,),
-                                    ),
-                                    Flexible(
-                                      flex: 1,
-                                      child: IconButton(
-                                        onPressed: (){
-                                          showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                    title: Text("Add Todolist"),
-                                                    content: SingleChildScrollView(
-                                                      child: Column(
-                                                        children: [
-                                                          selectededitPhoto == false ? Image.network(widget.recipemodel.cookimglist[index], fit: BoxFit.contain,)
-                                                              : Image.file(File(_selectedimage!.path), fit: BoxFit.contain,),
-                                                          Row(
-                                                            children: [
-                                                              Flexible(
-                                                                flex: 1,
-                                                                child: Container(
-                                                                    width: MediaQuery.of(context).size.width,
-                                                                    child: Center(child: Text((index + 1).toString(), style: TextStyle(fontSize: 12.0),))
-                                                                ),
-                                                              ),
-                                                              Flexible(
-                                                                flex: 5,
-                                                                child: Container(
-                                                                  width: MediaQuery.of(context).size.width,
-                                                                  child: TextFormField(
-                                                                    initialValue: widget.recipemodel.cookinfolist[index],
-                                                                    onChanged: (String value){
-                                                                      setState(() {
-                                                                        cookinfoinput = value;
-                                                                      });
-                                                                    },
+                                      Flexible(
+                                        flex: 3,
+                                        child: widget.recipemodel.cookimglist[index] == ""
+                                            ? Text('No image')
+                                            : Image.network(widget.recipemodel.cookimglist[index], fit: BoxFit.cover,),
+                                      ),
+                                      Flexible(
+                                        flex: 1,
+                                        child: IconButton(
+                                          onPressed: (){
+                                            showDialog(
+                                                context: context,
+                                                builder: (BuildContext context) {
+                                                  return AlertDialog(
+                                                      title: Text("Add Todolist"),
+                                                      content: SingleChildScrollView(
+                                                        child: Column(
+                                                          children: [
+                                                            selectededitPhoto == false ? Image.network(widget.recipemodel.cookimglist[index], fit: BoxFit.contain,)
+                                                                : Image.file(File(_selectedimage!.path), fit: BoxFit.contain,),
+                                                            Row(
+                                                              children: [
+                                                                Flexible(
+                                                                  flex: 1,
+                                                                  child: Container(
+                                                                      width: MediaQuery.of(context).size.width,
+                                                                      child: Center(child: Text((index + 1).toString(), style: TextStyle(fontSize: 12.0),))
                                                                   ),
                                                                 ),
-                                                              ),
-                                                              Flexible(
-                                                                flex: 1,
-                                                                child: IconButton(
-                                                                  onPressed: () async => await getcookingImageFromGallery(),
-                                                                  icon: Icon(Icons.image_outlined),
+                                                                Flexible(
+                                                                  flex: 5,
+                                                                  child: Container(
+                                                                    width: MediaQuery.of(context).size.width,
+                                                                    child: TextFormField(
+                                                                      initialValue: widget.recipemodel.cookinfolist[index],
+                                                                      onChanged: (String value){
+                                                                        setState(() {
+                                                                          cookinfoinput = value;
+                                                                        });
+                                                                      },
+                                                                    ),
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ],
+                                                                Flexible(
+                                                                  flex: 1,
+                                                                  child: IconButton(
+                                                                    onPressed: () async => await getcookingImageFromGallery(),
+                                                                    icon: Icon(Icons.image_outlined),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                    actions: <Widget>[
-                                                      FlatButton(onPressed: () async{
-                                                        Future<String> selectedimagepath = _cookinfouploadFile(_selectedimage!.path);
-                                                        String pathpath = await selectedimagepath;
-                                                        setState((){
-                                                          widget.recipemodel.cookinfolist[index] = cookinfoinput;
-                                                          widget.recipemodel.cookimglist[index] = pathpath;
-                                                        });
-                                                        Navigator.of(context).pop();
-                                                      },
-                                                          child: Text("Add"))
-                                                    ]
-                                                );
-                                              });
-                                        },
-                                        icon: Icon(Icons.edit),
+                                                      actions: <Widget>[
+                                                        FlatButton(onPressed: () async{
+                                                          Future<String> selectedimagepath = _cookinfouploadFile(_selectedimage!.path);
+                                                          String pathpath = await selectedimagepath;
+                                                          setState((){
+                                                            widget.recipemodel.cookinfolist[index] = cookinfoinput;
+                                                            widget.recipemodel.cookimglist[index] = pathpath;
+                                                          });
+                                                          Navigator.of(context).pop();
+                                                        },
+                                                            child: Text("Add"))
+                                                      ]
+                                                  );
+                                                });
+                                          },
+                                          icon: Icon(Icons.edit),
+                                        ),
                                       ),
-                                    ),
-                                    Flexible(
-                                      flex: 1,
-                                      child: IconButton(
-                                        onPressed: (){
-                                          setState(() {
-                                            widget.recipemodel.cookinfolist.removeAt(index);
-                                            widget.recipemodel.cookimglist.removeAt(index);
-                                          });
-                                        },
-                                        icon: Icon(Icons.delete),
+                                      Flexible(
+                                        flex: 1,
+                                        child: IconButton(
+                                          onPressed: (){
+                                            setState(() {
+                                              widget.recipemodel.cookinfolist.removeAt(index);
+                                              widget.recipemodel.cookimglist.removeAt(index);
+                                            });
+                                          },
+                                          icon: Icon(Icons.delete),
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ],
                             );

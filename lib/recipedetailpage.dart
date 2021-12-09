@@ -25,6 +25,8 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
 
   Future<dynamic> fetchBookmarks() async {
     var currentUser = _auth.currentUser!;
+    print("currentUser.uid");
+    print(currentUser.uid);
     var result = await FirebaseFirestore.instance
         .collection("bookmark")
         .doc(currentUser.uid)
@@ -106,29 +108,28 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: RecipeDetailPage.mainColor, size: 30.0,),
+          icon: Icon(Icons.arrow_back, size: 30.0,),
           onPressed: (){
             Navigator.pop(context);
           },
         ),
         centerTitle: true,
-        title: Text('모앱개 레시피', style: TextStyle(color: Colors.black,),),
+        title: Text('모앱개 레시피',),
         actions: [
           IconButton(
             onPressed: (){
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => RecipeEditPage(recipemodel: widget.recipemodel)));
             },
-            icon: Icon(Icons.edit, color: RecipeDetailPage.mainColor, size: 30.0,),
+            icon: Icon(Icons.edit, size: 30.0,),
           ),
           IconButton(
             onPressed: (){
               deleteDoc(widget.recipemodel.recipetitle);
               Navigator.pop(context);
             },
-            icon: Icon(Icons.delete, color: RecipeDetailPage.mainColor, size: 30.0,),
+            icon: Icon(Icons.delete, size: 30.0,),
           ),
         ],
       ),

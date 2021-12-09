@@ -161,18 +161,17 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: RecipeAddPage.mainColor, size: 30.0,),
+          icon: Icon(Icons.arrow_back, size: 30.0,),
           onPressed: (){
             Navigator.pop(context);
           },
         ),
         centerTitle: true,
-        title: Text('모앱개 레시피', style: TextStyle(color: Colors.black,),),
+        title: Text('모앱개 레시피',),
         actions: [
           IconButton(
-            icon: Icon(Icons.add, color: RecipeAddPage.mainColor,),
+            icon: Icon(Icons.add,),
             onPressed: (){
               _uploadFile(_image!.path);
               Navigator.pop(context);
