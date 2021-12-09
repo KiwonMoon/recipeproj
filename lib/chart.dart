@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class ChartPage extends StatefulWidget {
   @override
@@ -7,17 +8,21 @@ class ChartPage extends StatefulWidget {
 }
 
 class _ChartPageState extends State<ChartPage> {
-  List<double> points = [99, 95, 87, 72, 70, 64, 49, 37];
-  List<String> labels = [
-    "쌀",
-    "고구마",
-    "밀가루",
-    "계란",
-    "체다치즈",
-    "소고기",
-    "돼지고기",
-    "참치캔",
-  ];
+  late List<_ChartData> data;
+  late TooltipBehavior _tooltip;
+
+  @override
+  void initState() {
+    // data = [
+    //   _ChartData('CHN', 12),
+    //   _ChartData('GER', 15),
+    //   _ChartData('RUS', 30),
+    //   _ChartData('BRZ', 6.4),
+    //   _ChartData('IND', 14)
+    // ];
+    _tooltip = TooltipBehavior(enable: true);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +38,38 @@ class _ChartPageState extends State<ChartPage> {
               return CircularProgressIndicator();
             }
             return Padding(
-              padding: const EdgeInsets.only(top: 30, left: 10),
-              child: Column(
+              padding: const EdgeInsets.only(top: 30, left: 5),
+              child:
+              Column(
+                children: <Widget>[
+                  Text('\u{1F373} 레시피에 많이 쓰인 재료 상위 10가지 \u{1F373}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                  SizedBox(height: 30,),
+                  SfCartesianChart(
+                      primaryXAxis: CategoryAxis(),
+                      primaryYAxis: NumericAxis(minimum: 0, maximum: 20, interval: 5),
+                      tooltipBehavior: _tooltip,
+                      series: <ChartSeries<_ChartData, String>>[
+                        BarSeries<_ChartData, String>(
+                            dataSource: [
+                              _ChartData(snapshot.data!.docs[9]['name'], snapshot.data!.docs[9]['counter']),
+                              _ChartData(snapshot.data!.docs[8]['name'], snapshot.data!.docs[8]['counter']),
+                              _ChartData(snapshot.data!.docs[7]['name'], snapshot.data!.docs[7]['counter']),
+                              _ChartData(snapshot.data!.docs[6]['name'], snapshot.data!.docs[6]['counter']),
+                              _ChartData(snapshot.data!.docs[5]['name'], snapshot.data!.docs[5]['counter']),
+                              _ChartData(snapshot.data!.docs[4]['name'], snapshot.data!.docs[4]['counter']),
+                              _ChartData(snapshot.data!.docs[3]['name'], snapshot.data!.docs[3]['counter']),
+                              _ChartData(snapshot.data!.docs[2]['name'], snapshot.data!.docs[2]['counter']),
+                              _ChartData(snapshot.data!.docs[1]['name'], snapshot.data!.docs[1]['counter']),
+                              _ChartData(snapshot.data!.docs[0]['name'], snapshot.data!.docs[0]['counter']),
+                            ],
+                            xValueMapper: (_ChartData data, _) => data.x,
+                            yValueMapper: (_ChartData data, _) => data.y,
+                            name: 'count',
+                            color: Colors.deepOrange)
+                      ]),
+                ],
+              ),
+              /*Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text('\u{1F373} 레시피에 많이 쓰인 재료 상위 10가지 \u{1F373}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
@@ -49,16 +84,8 @@ class _ChartPageState extends State<ChartPage> {
                   ChartLine(rate: snapshot.data!.docs[7]['counter']*0.1, title: snapshot.data!.docs[7]['name'], number: snapshot.data!.docs[7]['counter']),
                   ChartLine(rate: snapshot.data!.docs[8]['counter']*0.1, title: snapshot.data!.docs[8]['name'], number: snapshot.data!.docs[8]['counter']),
                   ChartLine(rate: snapshot.data!.docs[9]['counter']*0.1, title: snapshot.data!.docs[9]['name'], number: snapshot.data!.docs[9]['counter']),
-                  // ChartLine(title: labels[0], number: points[0], rate: points[0]*0.01),
-                  // ChartLine(title: labels[1], number: points[1], rate: points[1]*0.01),
-                  // ChartLine(title: labels[2], number: points[2], rate: points[2]*0.01),
-                  // ChartLine(title: labels[3], number: points[3], rate: points[3]*0.01),
-                  // ChartLine(title: labels[4], number: points[4], rate: points[4]*0.01),
-                  // ChartLine(title: labels[5], number: points[5], rate: points[5]*0.01),
-                  // ChartLine(title: labels[6], number: points[6], rate: points[6]*0.01),
-                  // ChartLine(title: labels[7], number: points[7], rate: points[7]*0.01),
                 ],
-              ),
+              ),*/
             );
           }
         ),
@@ -113,12 +140,6 @@ class ChartLine extends StatelessWidget {
                     width: lineWidget,
                   ),
                 ),
-                // Text(
-                //   number.toString(),
-                //   style: TextStyle(
-                //     fontSize: 12,
-                //   ),
-                // ),
               ],
             ),
           ],
@@ -126,4 +147,10 @@ class ChartLine extends StatelessWidget {
       );
     });
   }
+}
+class _ChartData {
+  _ChartData(this.x, this.y);
+
+  final String x;
+  final int y;
 }
