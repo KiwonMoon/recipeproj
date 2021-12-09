@@ -83,6 +83,74 @@ class IngredientsRepository {
           category: Category.processed,
           name: '참치캔',
           img: 'images/processed/canned.png'),
+      IngredientModel(
+          category: Category.vegetable,
+          name: '브로콜리',
+          img: 'images/vegetable/broccoli.png'),
+      IngredientModel(
+          category: Category.vegetable,
+          name: '배추',
+          img: 'images/vegetable/cabbage.png'),
+      IngredientModel(
+          category: Category.vegetable,
+          name: '당근',
+          img: 'images/vegetable/carrot.png'),
+      IngredientModel(
+          category: Category.vegetable,
+          name: '고추',
+          img: 'images/vegetable/chili.png'),
+      IngredientModel(
+          category: Category.vegetable,
+          name: '오이',
+          img: 'images/vegetable/cucumber.png'),
+      IngredientModel(
+          category: Category.vegetable,
+          name: '마늘',
+          img: 'images/vegetable/garlic.png'),
+      IngredientModel(
+          category: Category.vegetable,
+          name: '대파',
+          img: 'images/vegetable/green-onion.png'),
+      IngredientModel(
+          category: Category.vegetable,
+          name: '김치',
+          img: 'images/vegetable/kimchi.png'),
+      IngredientModel(
+          category: Category.vegetable,
+          name: '버섯',
+          img: 'images/vegetable/mushrooms.png'),
+      IngredientModel(
+          category: Category.vegetable,
+          name: '양파',
+          img: 'images/vegetable/onion.png'),
+      IngredientModel(
+          category: Category.vegetable,
+          name: '파프리카',
+          img: 'images/vegetable/paprika.png'),
+      IngredientModel(
+          category: Category.seafood,
+          name: '고등어',
+          img: 'images/seafood/fish.png'),
+      IngredientModel(
+          category: Category.seafood,
+          name: '문어',
+          img: 'images/seafood/octopus.png'),
+      IngredientModel(
+          category: Category.seafood,
+          name: '미역',
+          img: 'images/seafood/seaweed.png'),
+      IngredientModel(
+          category: Category.seafood,
+          name: '조개',
+          img: 'images/seafood/shell.png'),
+      IngredientModel(
+          category: Category.seafood,
+          name: '새우',
+          img: 'images/seafood/shrimp.png'),
+      IngredientModel(
+          category: Category.seafood,
+          name: '오징어',
+          img: 'images/seafood/squid.png'),
     ];
     if (category == Category.all) {
       return allIngredients;

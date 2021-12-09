@@ -1,4 +1,4 @@
-enum Category { all, grain, meat, processed }
+enum Category { all, grain, meat, processed, vegetable, seafood }
 
 class IngredientModel {
   const IngredientModel({

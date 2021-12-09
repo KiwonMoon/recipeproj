@@ -35,6 +35,7 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
   String ingredientinput = "";
   String quantityinput = "";
   String cookinfoinput = "";
+  int counter = 0;
 
   final titleController = TextEditingController();
   final introductionController = TextEditingController();
@@ -76,6 +77,7 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
       print(downloadUrl);
       // 문서 작성
       await FirebaseFirestore.instance.collection('recipe').doc(titleController.text).set({
+        'recipecategory': _categoryDefault,
         'recipetitle': titleController.text,
         'recipeinfo': introductionController.text,
         'imagepath': downloadUrl,
@@ -90,6 +92,23 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
     } catch (e) {
       print(e);
     }
+  }
+
+  Future<void> rankUpload(String ingredient) async {
+    int like =0;
+    await FirebaseFirestore.instance.collection('rank').doc(ingredient).get()
+        .then((DocumentSnapshot document) {
+      // like = document['counter'];
+      counter = document['counter'];
+      print('기존 like: $counter');
+      setState(() {
+        counter++;
+        // like++;
+      });
+    });
+    await FirebaseFirestore.instance.collection('rank').doc(ingredient).update({
+      'counter': counter,
+    });
   }
 
   Future<String> _cookinfouploadFile(String fileName) async {
@@ -111,8 +130,7 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
       // 업로드 완료 후 url
       final downloadUrl = await firebaseStorageRef.getDownloadURL();
       return downloadUrl;
-      // cookimgList.add(downloadUrl);
-      // print(cookimgList);
+
     } catch (e) {
       print(e);
       return "";
@@ -120,15 +138,14 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
   }
 
 
-  final _peopleList = ['1명','2명','3명'];
-  var _peopleDefault = '1명';
-  final _timeList = ['1시간 이내','1~2시간','2시간 이상'];
-  var _timeDefault = '1시간 이내';
+  final _peopleList = ['1인분','2인분','3인분 이상'];
+  var _peopleDefault = '1인분';
+  final _timeList = ['15분 이내','30분 이내','1시간 이내', '1시간 이상'];
+  var _timeDefault = '15분 이내';
   final _difficultyList = ['하','중','상'];
   var _difficultyDefault = '하';
-
-  var _introduceCount = 3;
-  var _orderCount = 3;
+  final _categoryList = ['밥','분식','국/탕/찌개','일식','양식','중식','면','반찬','야식','간식'];
+  var _categoryDefault = '밥';
 
   @override
   Widget build(BuildContext context) {
@@ -144,18 +161,17 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: RecipeAddPage.mainColor, size: 30.0,),
+          icon: Icon(Icons.arrow_back, size: 30.0,),
           onPressed: (){
             Navigator.pop(context);
           },
         ),
         centerTitle: true,
-        title: Text('모앱개 레시피', style: TextStyle(color: Colors.black,),),
+        title: Text('모앱개 레시피',),
         actions: [
           IconButton(
-            icon: Icon(Icons.add, color: RecipeAddPage.mainColor,),
+            icon: Icon(Icons.add,),
             onPressed: (){
               _uploadFile(_image!.path);
               Navigator.pop(context);
@@ -180,11 +196,24 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
                       color: RecipeAddPage.backColor,
                     ),
                     width: MediaQuery.of(context).size.width,
-                    child: TextField(
-                      controller: titleController,
-                      decoration: InputDecoration(
-                        hintText: '해물파전',
-                        hintStyle: TextStyle(color: RecipeAddPage.fontColor, fontSize: 10.0,),
+                    child: ListTile(
+                      title: TextField(
+                        controller: titleController,
+                        decoration: InputDecoration(
+                          hintText: '해물파전',
+                          hintStyle: TextStyle(color: RecipeAddPage.fontColor, fontSize: 10.0,),
+                        ),
+                      ),
+                      trailing: DropdownButton(
+                        value: _categoryDefault,
+                        items: _categoryList.map<DropdownMenuItem<String>>(
+                                (String value){
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value, style: TextStyle(fontSize: 10.0,),),
+                              );
+                            }).toList(),
+                        onChanged: (value) => setState(() => _categoryDefault = value as String),
                       ),
                     ),
                   ),
@@ -429,6 +458,7 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
                                               quantityList.add(quantityinput);
                                               print(ingredientList);
                                               print(quantityList);
+                                              rankUpload(ingredientinput);
                                             });
                                             Navigator.of(context).pop();
                                           },
@@ -488,6 +518,20 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
                                       child: cookimgList[index] == ""
                                           ? Text('No image')
                                           : Image.network(cookimgList[index], fit: BoxFit.cover,),
+                                    ),
+                                    Flexible(
+                                      flex: 1,
+                                      child: IconButton(
+                                        onPressed: (){
+                                          setState(() {
+                                            cookinfoList.removeAt(index);
+                                            cookimgList.removeAt(index);
+                                            print(cookinfoList);
+                                            print(cookimgList);
+                                          });
+                                        },
+                                        icon: Icon(Icons.delete),
+                                      ),
                                     ),
                                   ],
                                 ),

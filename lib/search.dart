@@ -3,6 +3,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:recipe_project/recipedetailpage.dart';
+
+import 'model/recipe_model.dart';
 
 
 class Search extends StatefulWidget {
@@ -198,12 +201,56 @@ class RecipeTile extends StatelessWidget {
   RecipeTile(this.name);
   @override
   Widget build(BuildContext context) {
+    var a, b, c, d, e, f, g, h, i, j , k;
     return ListTile(
       contentPadding: EdgeInsets.fromLTRB(28, 0, 8, 0),
       title: Text(this.name),
       onTap: (){
         print('tap : ${this.name}');
+        FirebaseFirestore.instance.collection('recipe').doc('${this.name}')
+            .get().then((DocumentSnapshot document) {
+              // a = document['recipetitle'];
+              // b = document['recipeinfo'];
+              // c = document['imagepath'];
+              // d = document['peoplecount'];
+              // e = document['cookingtime'];
+              // f = document['difficulty'];
+              // g = document['ingredientlist'];
+              // h = document['quantitylist'];
+              // i = document['cookinfolist'];
+              // j = document['cookimglist'];
+          RecipeModel model = RecipeModel(recipetitle: document['recipetitle'], recipecategory: document['recipecategory'],
+              recipeinfo: document['recipeinfo'], imagepath: document['imagepath'],
+              peoplecount: document['peoplecount'], cookingtime: document['cookingtime'],
+              difficulty: document['difficulty'], ingredientlist: document['ingredientlist'],
+              quantitylist: document['quantitylist'], cookinfolist: document['cookinfolist'],
+              cookimglist: document['cookimglist']);
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => RecipeDetailPage(recipemodel: model)));
+        });
+        // RecipeModel model = RecipeModel(recipetitle: a,
+        //     recipeinfo: b, imagepath: c,
+        //     peoplecount: d, cookingtime: e,
+        //     difficulty: f, ingredientlist: g,
+        //     quantitylist: h, cookinfolist:i,
+        //     cookimglist: j);
+        // Navigator.push(context,
+        //     MaterialPageRoute(builder: (context) => RecipeDetailPage(recipemodel: model)));
       },
     );
   }
+  // Future<dynamic> tapFunc(String str) async {
+  //   var searchResult = await FirebaseFirestore.instance
+  //       .collection("recipe")
+  //       .doc(str)
+  //       .get();
+  //   RecipeModel model = RecipeModel(recipetitle: searchResult['recipetitle'],
+  //       recipeinfo: searchResult['recipeinfo'], imagepath: searchResult['imagepath'],
+  //       peoplecount: searchResult['peoplecount'], cookingtime: searchResult['cookingtime'],
+  //       difficulty: searchResult[''], ingredientlist: searchResult[''],
+  //       quantitylist: searchResult[''], cookinfolist: searchResult[''],
+  //       cookimglist: searchResult['']);
+  //   Navigator.push(context,
+  //       MaterialPageRoute(builder: (context) => RecipeDetailPage(recipemodel: model)));
+  //   }
 }

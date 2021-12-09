@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recipe_project/categoryList.dart';
 import 'package:recipe_project/ingredient_add.dart';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,9 +12,10 @@ import 'model/category_repository.dart';
 import 'model/category_model.dart';
 import 'bookmark.dart';
 import 'package:recipe_project/search.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'model/login.dart';
 import 'map.dart';
+import 'calendar.dart';
 
 class Ingredient extends StatefulWidget {
   @override
@@ -29,7 +31,7 @@ class _IngredientState extends State<Ingredient> {
     var titleSearch;
     snap.docs.forEach((document) {
       titleSearch = document.data();
-      searchNameList.add(titleSearch['recipeTitle']);
+      searchNameList.add(titleSearch['recipetitle']);
     });
     print('searchNameList::: $searchNameList');
   }
@@ -66,6 +68,8 @@ class _IngredientState extends State<Ingredient> {
             ],
           ),
           onTap: (){
+            Navigator.push(context, MaterialPageRoute(
+                builder: (context) => CateList(categoryName: product.name)));
             //Navigator.push(context, MaterialPageRoute(builder: (context) => RecipePage()),);
           },
         ),
@@ -130,6 +134,25 @@ class _IngredientState extends State<Ingredient> {
               ),
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => BookmarkPage()),);
+              },
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.exit_to_app,
+                semanticLabel: 'bookmark',
+                size: 33.0,
+              ),
+              onPressed: () {
+                if(googlelogin == true) {
+                  googleSignIn.signOut();
+                  print('GOOGLE LOGOUT');
+                }else {
+                  FirebaseAuth.instance.signOut();
+                  print('GUEST LOGOUT');
+                }
+                Navigator.pop(context);
+                // Navigator.push(context,
+                //     MaterialPageRoute(builder: (context) => Login()));
               },
             ),
           ],
@@ -406,6 +429,26 @@ class _IngredientState extends State<Ingredient> {
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 ChartPage()));
+                                  },
+                                ),
+                                SizedBox(height: 5,),
+                                RaisedButton(
+                                  child: Text(
+                                    '일정 보기',
+                                    style: TextStyle(
+                                        fontSize: 20, color: Colors.white),
+                                  ),
+                                  color: Colors.deepOrange,
+                                  padding: EdgeInsets.fromLTRB(55, 15, 55, 15),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20.0))),
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                Calendar()));
                                   },
                                 ),
                               ],

@@ -125,12 +125,21 @@ class _BookmarkPageState extends State<BookmarkPage> {
               },
               contentPadding: EdgeInsets.only(left: 10),
               visualDensity: VisualDensity(vertical: 4,horizontal: -3),
-              leading: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                child: Image.asset(
-                  imgs[index],
-                  fit: BoxFit.cover,
-                  width: 140,
+              leading: Container(
+                width: 125,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                  child:
+                  // Image.asset(
+                  //   imgs[index],
+                  //   fit: BoxFit.cover,
+                  //   width: 120,
+                  // ),
+                  Image.network(
+                    imgs[index],
+                    fit: BoxFit.cover,
+                    width: 120,
+                  ),
                 ),
               ),
               title: Text(

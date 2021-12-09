@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'model/recipe_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'recipeeditpage.dart';
+
 
 class RecipeDetailPage extends StatefulWidget {
   final RecipeModel recipemodel;
@@ -23,6 +25,8 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
 
   Future<dynamic> fetchBookmarks() async {
     var currentUser = _auth.currentUser!;
+    print("currentUser.uid");
+    print(currentUser.uid);
     var result = await FirebaseFirestore.instance
         .collection("bookmark")
         .doc(currentUser.uid)
@@ -96,20 +100,38 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
     super.initState();
   }
 
+  void deleteDoc(String docID) {
+    FirebaseFirestore.instance.collection('recipe').doc(docID).delete();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: RecipeDetailPage.mainColor, size: 30.0,),
+          icon: Icon(Icons.arrow_back, size: 30.0,),
           onPressed: (){
             Navigator.pop(context);
           },
         ),
         centerTitle: true,
-        title: Text('모앱개 레시피', style: TextStyle(color: Colors.black,),),
+        title: Text('모앱개 레시피',),
+        actions: [
+          IconButton(
+            onPressed: (){
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => RecipeEditPage(recipemodel: widget.recipemodel)));
+            },
+            icon: Icon(Icons.edit, size: 30.0,),
+          ),
+          IconButton(
+            onPressed: (){
+              deleteDoc(widget.recipemodel.recipetitle);
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.delete, size: 30.0,),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -122,7 +144,6 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                   icon: Icon(bookmarkIcon, color: Colors.black, size: 30.0,),
                   onPressed: (){
                     addOrDeleteBookmark();
-
                   },
                 ),
               ),
