@@ -20,7 +20,7 @@ final kEvents = LinkedHashMap<DateTime, List<Event>>(
   hashCode: getHashCode,
 )..addAll(_kEventSource);
 
-var eat = ['치킨', '덥밥', '삼계탕', '죽', '칼국수', '간장계란밥', '돈까스', '초밥'];
+var eat = ['치킨', '덥밥', '삼계탕', '죽', '칼국수', '간장계란밥', '돈까스', '초밥', '삼겹살'];
 var rnd = Random().nextInt(7);
 // final _kEventSource = Map.fromIterable(List.generate(50, (index) => index),
 //     key: (item) => DateTime.utc(kFirstDay.year, kFirstDay.month, item * 5),
@@ -32,8 +32,8 @@ var rnd = Random().nextInt(7);
 //       Event('Today\'s Event 2'),
 //     ],
 //   });
-final _kEventSource = Map.fromIterable(List.generate(50, (index) => index),
-    key: (item) => DateTime.utc(kFirstDay.year, kFirstDay.month, item * 5),
+final _kEventSource = Map.fromIterable(List.generate(150, (index) => index),
+    key: (item) => DateTime.utc(kFirstDay.year, kFirstDay.month, item * Random().nextInt(3)+1),
     value: (item) => List.generate(
         item % 3 + 1, (index) => Event('Event $item | ${eat[Random().nextInt(7)]}')))
   ..addAll({
@@ -58,4 +58,5 @@ List<DateTime> daysInRange(DateTime first, DateTime last) {
 
 final kToday = DateTime.now();
 final kFirstDay = DateTime(kToday.year, kToday.month - 3, kToday.day);
-final kLastDay = DateTime(kToday.year, kToday.month + 3, kToday.day);
+// final kLastDay = DateTime(kToday.year, kToday.month + 3, kToday.day);
+final kLastDay = DateTime.now();

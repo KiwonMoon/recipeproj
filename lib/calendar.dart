@@ -16,6 +16,7 @@ class _CalendarState extends State<Calendar> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   DateTime? _rangeStart;
+  // DateTime _rangeEnd = DateTime.now();
   DateTime? _rangeEnd;
   final _events = {
   DateTime.utc(2021, 1, 1): ['Event 1'],
@@ -97,7 +98,7 @@ class _CalendarState extends State<Calendar> {
         children: <Widget>[
           TableCalendar<Event>(
             firstDay: DateTime.utc(2020, 10, 16),
-            lastDay: DateTime.utc(2030, 3, 14),
+            lastDay: DateTime.utc(2025, 3, 14),
             focusedDay: _focusedDay,
             calendarFormat: _calendarFormat,
             rangeStartDay: _rangeStart,
