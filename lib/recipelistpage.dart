@@ -56,8 +56,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
             Navigator.pop(context);
           },
         ),
-        centerTitle: true,
-        title: Text('모앱개 레시피',),
+        title: Text('RECIPE',),
         actions: [
           IconButton(
             icon: Icon(Icons.bookmark_border_outlined, size: 33.0,),

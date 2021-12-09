@@ -114,8 +114,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
             Navigator.pop(context);
           },
         ),
-        centerTitle: true,
-        title: Text('모앱개 레시피',),
+        title: Text('RECIPE',),
         actions: [
           IconButton(
             onPressed: (){
