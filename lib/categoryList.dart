@@ -18,20 +18,17 @@ class _CateListState extends State<CateList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: RecipeListPage.mainBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: RecipeListPage.mainColor, size: 30.0,),
+          icon: Icon(Icons.arrow_back, size: 30.0,),
           onPressed: (){
             Navigator.pop(context);
           },
         ),
-        centerTitle: true,
-        title: Text('모앱개 레시피', style: TextStyle(color: Colors.black,),),
+        title: Text('RECIPE',),
         actions: [
           IconButton(
-            icon: Icon(Icons.bookmark_border_outlined, color: Colors.black, size: 33.0,),
+            icon: Icon(Icons.bookmark_border_outlined, size: 33.0,),
             onPressed: (){
               Navigator.push(context, MaterialPageRoute(builder: (context) => BookmarkPage()),);
             },

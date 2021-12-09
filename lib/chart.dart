@@ -22,7 +22,7 @@ class _ChartPageState extends State<ChartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Chart'),),
+      appBar: AppBar(title: Text('CHART'),),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: StreamBuilder<QuerySnapshot>(

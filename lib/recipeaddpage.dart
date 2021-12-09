@@ -167,8 +167,7 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
             Navigator.pop(context);
           },
         ),
-        centerTitle: true,
-        title: Text('모앱개 레시피',),
+        title: Text('RECIPE',),
         actions: [
           IconButton(
             icon: Icon(Icons.add,),
