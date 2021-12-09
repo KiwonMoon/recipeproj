@@ -6,19 +6,19 @@ class CategoryRepository {
       CategoryModel(
           name: '밥',
           id: 0,
-          img: 'images/category/rice.png'),
+          img: 'images/category/rice2.png'),
       CategoryModel(
           name: '분식',
           id: 1,
-          img: 'images/category/ricecake.png'),
+          img: 'images/category/tteokbokki.png'),
       CategoryModel(
           name: '국/탕/찌개',
           id: 2,
-          img: 'images/category/soup.png'),
+          img: 'images/category/soup2.png'),
       CategoryModel(
           name: '일식',
           id: 3,
-          img: 'images/category/japanfood.png'),
+          img: 'images/category/japanese.png'),
       CategoryModel(
           name: '양식',
           id: 4,
@@ -26,23 +26,23 @@ class CategoryRepository {
       CategoryModel(
           name: '중식',
           id: 5,
-          img: 'images/category/chinesefood.png'),
+          img: 'images/category/chinese.png'),
       CategoryModel(
           name: '면',
           id: 6,
-          img: 'images/category/ramen.png'),
+          img: 'images/category/noodles.png'),
       CategoryModel(
           name: '반찬',
           id: 7,
-          img: 'images/category/sidemenu.png'),
+          img: 'images/category/fried-egg.png'),
       CategoryModel(
           name: '야식',
           id: 8,
-          img: 'images/category/chicken.png'),
+          img: 'images/category/chicken2.png'),
       CategoryModel(
           name: '간식',
           id: 9,
-          img: 'images/category/snack.png'),
+          img: 'images/category/snacks.png'),
     ];
 
     return allCategories;

@@ -119,6 +119,15 @@ flutter:
      - images/category/snack.png
      - images/category/soup.png
      - images/category/spaguetti.png
+     - images/category/chicken2.png
+     - images/category/chinese.png
+     - images/category/fried-egg.png
+     - images/category/japanese.png
+     - images/category/noodles.png
+     - images/category/rice2.png
+     - images/category/snacks.png
+     - images/category/soup2.png
+     - images/category/tteokbokki.png
      - images/recipe.png
 
   # An image asset can refer to one or more resolution-specific "variants", see

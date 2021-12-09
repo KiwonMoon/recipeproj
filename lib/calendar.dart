@@ -10,6 +10,8 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
+  List menuList = [];
+  String menu = '';
   late final ValueNotifier<List<Event>> _selectedEvents;
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.toggledOff;
   CalendarFormat _calendarFormat = CalendarFormat.month;
@@ -159,8 +161,42 @@ class _CalendarState extends State<Calendar> {
                               borderRadius: BorderRadius.circular(12.0),
                             ),
                             child: ListTile(
-                              onTap: () => print('${value[index]}'),
-                              title: Text('${value[index]}'),
+                              onTap: () {
+                                showDialog(
+                                    context: context,
+                                    builder:
+                                        (BuildContext context) {
+                                      return AlertDialog(
+                                        title: new Text(
+                                            "메뉴 입력"),
+                                        content: TextField(
+                                          onChanged: (text){
+                                            setState(() {
+                                              menu = text;
+                                            });
+                                          },
+                                        ),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            child: Text('등록'),
+                                            onPressed: () {
+                                              Navigator.pop(
+                                                  context);
+                                              menuList.add(menu);
+                                            },
+                                          ),
+                                          FlatButton(
+                                            child: Text('취소'),
+                                            onPressed: () {
+                                              Navigator.pop(
+                                                  context);
+                                            },
+                                          )
+                                        ],
+                                      );
+                                    });
+                              },
+                              title: Text('${value[index]} $menu'),
                             ),
                           );
                         });

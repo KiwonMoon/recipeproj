@@ -38,7 +38,7 @@ class _ChartPageState extends State<ChartPage> {
               return CircularProgressIndicator();
             }
             return Padding(
-              padding: const EdgeInsets.only(top: 30, left: 5),
+              padding: const EdgeInsets.only(top: 30, left: 3),
               child:
               Column(
                 children: <Widget>[
@@ -46,7 +46,7 @@ class _ChartPageState extends State<ChartPage> {
                   SizedBox(height: 30,),
                   SfCartesianChart(
                       primaryXAxis: CategoryAxis(),
-                      primaryYAxis: NumericAxis(minimum: 0, maximum: 20, interval: 5),
+                      primaryYAxis: NumericAxis(minimum: 0, maximum: 15, interval: 5),
                       tooltipBehavior: _tooltip,
                       series: <ChartSeries<_ChartData, String>>[
                         BarSeries<_ChartData, String>(

@@ -331,64 +331,6 @@ class _IngredientState extends State<Ingredient> {
                                       ],
                                     ),
                                   ),
-                                /*if (selected.isNotEmpty)
-                              GridView.builder(
-                                physics: NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: selectedMap.length,
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 5,
-                                  childAspectRatio: 3 / 5,
-                                  mainAxisSpacing: 10,
-                                  crossAxisSpacing: 2,
-                                ),
-                                itemBuilder: (BuildContext context, int index) {
-                                  return Card(
-                                    child: InkWell(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: <Widget>[
-                                          AspectRatio(
-                                            aspectRatio: 1 / 1,
-                                            child: Image.asset(
-                                              selectedMap.values
-                                                  .elementAt(index),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text(selectedMap.keys
-                                              .elementAt(index)),
-                                        ],
-                                      ),
-                                      onTap: () {
-                                        selectedMap.remove(
-                                            selectedMap.keys.elementAt(index));
-                                        print(selectedMap);
-                                      },
-                                    ),
-                                  );
-                                },
-                              ),
-                            if (selected.isEmpty)
-                              Container(
-                                child: Column(
-                                  children: <Widget>[
-                                    SizedBox(
-                                      height: 60,
-                                    ),
-                                    Text(
-                                      '냉장고가 비었습니다.\n'
-                                      '+ 버튼을 눌러 나의 재료를 추가해보세요!',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(fontSize: 18),
-                                    ),
-                                  ],
-                                ),
-                              ),*/
                                 SizedBox(
                                   height: 40,
                                 ),
@@ -434,12 +376,12 @@ class _IngredientState extends State<Ingredient> {
                                 SizedBox(height: 5,),
                                 RaisedButton(
                                   child: Text(
-                                    '일정 보기',
+                                    '내가 먹은 메뉴',
                                     style: TextStyle(
-                                        fontSize: 20, color: Colors.white),
+                                        fontSize: 18, color: Colors.white),
                                   ),
                                   color: Colors.deepOrange,
-                                  padding: EdgeInsets.fromLTRB(55, 15, 55, 15),
+                                  padding: EdgeInsets.fromLTRB(38, 15, 38, 15),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(20.0))),
@@ -493,6 +435,3 @@ class _IngredientState extends State<Ingredient> {
     }).catchError((error) => print("Failed to delete product: $error"));
   }
 }
-
-// List nameList = [];
-// List imgList = [];
