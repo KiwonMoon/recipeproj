@@ -169,6 +169,106 @@ class _AddIngredientState extends State<AddIngredient> {
       );
     }).toList();
   }
+  List<Card> _buildGridVegetable(BuildContext context) {
+    List<IngredientModel> products = IngredientsRepository.loadIngredients(Category.vegetable);
+
+    if(products == null || products.isEmpty) {
+      return const <Card>[];
+    }
+
+    final ThemeData theme = Theme.of(context);
+
+    return products.map((product) {
+      return Card(
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              AspectRatio(aspectRatio: 1/1,
+                child: Image.asset(
+                  product.img,
+                ),),
+              SizedBox(
+                height: 5,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  // if(selected.contains(product.name))
+                  if(widget.nameList.contains(product.name))
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0,0,8,0),
+                      child: Icon(Icons.circle, size: 5,),
+                    ),
+                  Text(product.name, style: TextStyle(fontSize: 10),),
+                ],
+              ),
+            ],
+          ),
+          onTap: (){
+            print('tap: ${product.name}');
+            selected.add(product.name);
+            selectedMap[product.name] = product.img;
+            print('<<map>>\n');
+            print(selectedMap);
+            // addIngredients(userID, product.name, product.img);
+            addIngredients(currentUserID!.uid, product.name, product.img);
+          },
+        ),
+      );
+    }).toList();
+  }
+  List<Card> _buildGridSeafood(BuildContext context) {
+    List<IngredientModel> products = IngredientsRepository.loadIngredients(Category.seafood);
+
+    if(products == null || products.isEmpty) {
+      return const <Card>[];
+    }
+
+    final ThemeData theme = Theme.of(context);
+
+    return products.map((product) {
+      return Card(
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              AspectRatio(aspectRatio: 1/1,
+                child: Image.asset(
+                  product.img,
+                ),),
+              SizedBox(
+                height: 5,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  // if(selected.contains(product.name))
+                  if(widget.nameList.contains(product.name))
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0,0,8,0),
+                      child: Icon(Icons.circle, size: 5,),
+                    ),
+                  Text(product.name, style: TextStyle(fontSize: 10),),
+                ],
+              ),
+            ],
+          ),
+          onTap: (){
+            print('tap: ${product.name}');
+            selected.add(product.name);
+            selectedMap[product.name] = product.img;
+            print('<<map>>\n');
+            print(selectedMap);
+            // addIngredients(userID, product.name, product.img);
+            addIngredients(currentUserID!.uid, product.name, product.img);
+          },
+        ),
+      );
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -230,9 +330,51 @@ class _AddIngredientState extends State<AddIngredient> {
                 Column(
                   children: <Widget>[
                     Text(
+                      '채소',
+                      style:
+                      TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                    ),
+                    GridView.count(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      crossAxisCount: 5,
+                      childAspectRatio: 3 / 4,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 2,
+                      children: _buildGridVegetable(context),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Column(
+                  children: <Widget>[
+                    Text(
+                      '해산물',
+                      style:
+                      TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                    ),
+                    GridView.count(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      crossAxisCount: 5,
+                      childAspectRatio: 3 / 4,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 2,
+                      children: _buildGridSeafood(context),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Column(
+                  children: <Widget>[
+                    Text(
                       '가공/유제품',
                       style:
-                          TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                      TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                     ),
                     GridView.count(
                       physics: NeverScrollableScrollPhysics(),
