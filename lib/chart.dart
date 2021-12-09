@@ -37,6 +37,8 @@ class _ChartPageState extends State<ChartPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  Text('\u{1F373} 레시피에 많이 쓰인 재료 상위 10가지 \u{1F373}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                  SizedBox(height: 30,),
                   ChartLine(rate: snapshot.data!.docs[0]['counter']*0.1, title: snapshot.data!.docs[0]['name'], number: snapshot.data!.docs[0]['counter']),
                   ChartLine(rate: snapshot.data!.docs[1]['counter']*0.1, title: snapshot.data!.docs[1]['name'], number: snapshot.data!.docs[1]['counter']),
                   ChartLine(rate: snapshot.data!.docs[2]['counter']*0.1, title: snapshot.data!.docs[2]['name'], number: snapshot.data!.docs[2]['counter']),

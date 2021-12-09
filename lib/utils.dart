@@ -20,7 +20,8 @@ final kEvents = LinkedHashMap<DateTime, List<Event>>(
   hashCode: getHashCode,
 )..addAll(_kEventSource);
 
-var eat = ['치킨', '덥밥', '삼계탕', '죽', '칼국수', '간장계란밥', '돈까스', '초밥', '삼겹살'];
+var eat = ['치킨', '덮밥', '삼계탕', '죽', '칼국수', '간장계란밥', '돈까스', '초밥', '삼겹살', '라면', '김치전', '떡볶이', '회',
+'피자', '햄버거', '불고기'];
 var rnd = Random().nextInt(7);
 // final _kEventSource = Map.fromIterable(List.generate(50, (index) => index),
 //     key: (item) => DateTime.utc(kFirstDay.year, kFirstDay.month, item * 5),
@@ -32,14 +33,14 @@ var rnd = Random().nextInt(7);
 //       Event('Today\'s Event 2'),
 //     ],
 //   });
-final _kEventSource = Map.fromIterable(List.generate(150, (index) => index),
-    key: (item) => DateTime.utc(kFirstDay.year, kFirstDay.month, item * Random().nextInt(3)+1),
+final _kEventSource = Map.fromIterable(List.generate(80, (index) => index),
+    key: (item) => DateTime.utc(2021, 10, item * Random().nextInt(3)+1),
     value: (item) => List.generate(
-        item % 3 + 1, (index) => Event('Event $item | ${eat[Random().nextInt(7)]}')))
+        item % 3 + 1, (index) => Event('MENU | ${eat[Random().nextInt(7)]}')))
   ..addAll({
     kToday: [
-      Event('Today\'s Event 1'),
-      Event('Today\'s Event 2'),
+      Event('Today\'s MENU 1'),
+      Event('Today\'s MENU 2'),
     ],
   });
 
