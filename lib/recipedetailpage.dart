@@ -127,6 +127,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
             onPressed: (){
               deleteDoc(widget.recipemodel.recipetitle);
               Navigator.pop(context);
+              Navigator.pop(context);
             },
             icon: Icon(Icons.delete, size: 30.0,),
           ),

@@ -144,7 +144,7 @@ class _RecipeAddPageState extends State<RecipeAddPage> {
   var _timeDefault = '15분 이내';
   final _difficultyList = ['하','중','상'];
   var _difficultyDefault = '하';
-  final _categoryList = ['밥','분식','국/탕/찌개','일식','양식','중식','면','반찬','야식','간식'];
+  final _categoryList = ['밥','분식','찌개','일식','양식','중식','면','반찬','야식','간식'];
   var _categoryDefault = '밥';
 
   @override

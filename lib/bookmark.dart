@@ -94,7 +94,7 @@ class _BookmarkPageState extends State<BookmarkPage> {
             Navigator.pop(context);
           },
         ),
-        title: Text("북마크 리스트"),
+        title: Text("BOOKMARK"),
       ),
       body: ListView.separated(
         itemCount: recipeTitles.length,
